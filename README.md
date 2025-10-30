@@ -1,2 +1,2 @@
 # AutoMate
-A Vehicle Management System freelance project
+[Ongoing] A Vehicle Management System freelance project
