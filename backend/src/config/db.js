@@ -15,5 +15,7 @@ export const initDB = async () => {
         owner_id INTEGER
       );
     `);
+
+    // To insert more database initialization here ...
     console.log("✅ Database initialized");
   };
