@@ -4,8 +4,8 @@ import { sql } from "../config/db.js";
 export const createOwner = async (name, contact) => {
   try {
     const result = await sql`
-      INSERT INTO owners (name, contact, vehicle_ids)
-      VALUES (${name}, ${contact}, '{}')
+      INSERT INTO owners (name, contact)
+      VALUES (${name}, ${contact})
       RETURNING *
     `;
     return result[0];
@@ -89,30 +89,7 @@ export const getVehiclesByOwnerId = async (owner_id) => {
   }
 };
 
-// Update owner's vehicle_ids array when a vehicle is added/removed
-export const updateOwnerVehicleIds = async (owner_id) => {
-  try {
-    // Get all vehicle IDs for this owner
-    const vehicles = await sql`
-      SELECT vehicle_id FROM vehicles 
-      WHERE owner_id = ${owner_id}
-    `;
-    
-    const vehicleIds = vehicles.map(v => v.vehicle_id);
-    
-    // Update the owner's vehicle_ids array
-    const result = await sql`
-      UPDATE owners
-      SET vehicle_ids = ${vehicleIds}
-      WHERE owner_id = ${owner_id}
-      RETURNING *
-    `;
-    return result[0];
-  } catch (error) {
-    console.error("Error updating owner vehicle IDs:", error);
-    throw error;
-  }
-};
+
 
 // Get owner with their vehicles (joined data)
 export const getOwnerWithVehicles = async (owner_id) => {
@@ -121,9 +98,9 @@ export const getOwnerWithVehicles = async (owner_id) => {
     if (!owner) {
       return null;
     }
-    
+
     const vehicles = await getVehiclesByOwnerId(owner_id);
-    
+
     return {
       ...owner,
       vehicles: vehicles

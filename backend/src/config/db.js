@@ -10,8 +10,7 @@ export async function initDB() {
       CREATE TABLE IF NOT EXISTS owners (
         owner_id SERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
-        contact VARCHAR(50),
-        vehicle_ids INTEGER[] DEFAULT '{}'
+        contact VARCHAR(50)
       )
     `;
 
@@ -55,12 +54,13 @@ export async function initDB() {
       CREATE TABLE IF NOT EXISTS maintenance_logs (
         log_id SERIAL PRIMARY KEY,
         vehicle_id INTEGER REFERENCES vehicles(vehicle_id) ON DELETE CASCADE,
-        date DATE NOT NULL,
         cost DECIMAL(10,2),
         description TEXT,
         user_name VARCHAR(100) NOT NULL,
         owner_id INTEGER REFERENCES owners(owner_id) ON DELETE SET NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        paid_at TIMESTAMP NULL,
+        paid_using VARCHAR(50) NULL
       )
     `;
 

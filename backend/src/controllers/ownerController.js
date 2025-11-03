@@ -5,8 +5,7 @@ import {
   updateOwner,
   deleteOwner,
   getVehiclesByOwnerId,
-  getOwnerWithVehicles,
-  updateOwnerVehicleIds
+  getOwnerWithVehicles
 } from "../models/ownerModel.js";
 
 // 📘 GET all owners (admin, mechanic only)
