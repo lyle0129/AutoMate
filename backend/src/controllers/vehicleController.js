@@ -1,9 +1,23 @@
 import { sql } from "../config/db.js";
 
-// 📘 GET all vehicles
+// 📘 GET all vehicles (filtered by user's owner_id for customers)
 export const getAllVehicles = async (req, res) => {
   try {
-    const vehicles = await sql`SELECT * FROM vehicles ORDER BY vehicle_id ASC`;
+    const { role, owner_id } = req.user;
+
+    let vehicles;
+    if (role === 'customer') {
+      // Customers can only see their own vehicles
+      vehicles = await sql`
+        SELECT * FROM vehicles 
+        WHERE owner_id = ${owner_id} 
+        ORDER BY vehicle_id ASC
+      `;
+    } else {
+      // Admin or other roles can see all vehicles
+      vehicles = await sql`SELECT * FROM vehicles ORDER BY vehicle_id ASC`;
+    }
+
     res.status(200).json(vehicles);
   } catch (error) {
     console.error("Error fetching vehicles:", error);
@@ -11,14 +25,28 @@ export const getAllVehicles = async (req, res) => {
   }
 };
 
-// 📘 GET single vehicle by ID
+// 📘 GET single vehicle by ID (with owner authorization)
 export const getVehicleById = async (req, res) => {
   try {
     const { id } = req.params;
-    const vehicle = await sql`SELECT * FROM vehicles WHERE vehicle_id = ${id}`;
-    if (vehicle.length === 0) {
-      return res.status(404).json({ message: "Vehicle not found" });
+    const { role, owner_id } = req.user;
+
+    let vehicle;
+    if (role === 'customer') {
+      // Customers can only access vehicles they own
+      vehicle = await sql`
+        SELECT * FROM vehicles 
+        WHERE vehicle_id = ${id} AND owner_id = ${owner_id}
+      `;
+    } else {
+      // Admin or other roles can access any vehicle
+      vehicle = await sql`SELECT * FROM vehicles WHERE vehicle_id = ${id}`;
     }
+
+    if (vehicle.length === 0) {
+      return res.status(404).json({ message: "Vehicle not found or access denied" });
+    }
+
     res.status(200).json(vehicle[0]);
   } catch (error) {
     console.error("Error fetching vehicle:", error);
@@ -26,7 +54,7 @@ export const getVehicleById = async (req, res) => {
   }
 };
 
-// 🧾 CREATE new vehicle
+// 🧾 CREATE new vehicle (admin only)
 export const createVehicle = async (req, res) => {
   try {
     const { plate_no, make, model, year, vehicle_type, owner_id } = req.body;
@@ -51,7 +79,7 @@ export const createVehicle = async (req, res) => {
   }
 };
 
-// 🧾 UPDATE vehicle by ID
+// 🧾 UPDATE vehicle by ID (admin only)
 export const updateVehicle = async (req, res) => {
   try {
     const { id } = req.params;
@@ -84,7 +112,7 @@ export const updateVehicle = async (req, res) => {
   }
 };
 
-// 🗑️ DELETE vehicle by ID
+// 🗑️ DELETE vehicle by ID (admin only)
 export const deleteVehicle = async (req, res) => {
   try {
     const { id } = req.params;

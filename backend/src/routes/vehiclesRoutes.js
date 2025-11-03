@@ -11,7 +11,7 @@ import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Routes
-router.get("/", verifyToken, authorizeRoles("admin", "mechanic"), getAllVehicles);
+router.get("/", verifyToken, authorizeRoles("admin", "mechanic", "customer"), getAllVehicles);
 router.get("/:id", verifyToken, authorizeRoles("admin", "mechanic", "customer"), getVehicleById);
 router.post("/", verifyToken, authorizeRoles("admin"), createVehicle);
 router.put("/:id", verifyToken, authorizeRoles("admin"), updateVehicle);

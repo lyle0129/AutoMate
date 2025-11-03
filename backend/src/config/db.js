@@ -5,6 +5,16 @@ export const sql = neon(process.env.DATABASE_URL);
 
 export async function initDB() {
   try {
+    // OWNERS (must be created first since users references it)
+    await sql`
+      CREATE TABLE IF NOT EXISTS owners (
+        owner_id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        contact VARCHAR(50),
+        vehicle_ids INTEGER[] DEFAULT '{}'
+      )
+    `;
+
     // USERS
     await sql`
       CREATE TABLE IF NOT EXISTS users (
@@ -12,17 +22,7 @@ export async function initDB() {
         user_name VARCHAR(100) UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'mechanic', 'customer')),
-        owner_id INTEGER
-      )
-    `;
-
-    // OWNERS
-    await sql`
-      CREATE TABLE IF NOT EXISTS owners (
-        owner_id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        contact VARCHAR(50),
-        vehicle_ids INTEGER[] DEFAULT '{}'
+        owner_id INTEGER REFERENCES owners(owner_id) ON DELETE SET NULL
       )
     `;
 

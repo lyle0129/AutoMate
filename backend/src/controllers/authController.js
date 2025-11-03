@@ -26,7 +26,7 @@ export const register = async (req, res) => {
 
     // Generate JWT token and set cookie
     const token = generateToken(
-      { id: newUser.id, user_name: newUser.user_name, role: newUser.role },
+      { id: newUser.id, user_name: newUser.user_name, role: newUser.role, owner_id: newUser.owner_id },
       res
     );
 
@@ -67,7 +67,7 @@ export const login = async (req, res) => {
 
     // Generate JWT token and set cookie
     const token = generateToken(
-      { id: user.id, user_name: user.user_name, role: user.role },
+      { id: user.id, user_name: user.user_name, role: user.role, owner_id: user.owner_id },
       res
     );
 
@@ -77,6 +77,7 @@ export const login = async (req, res) => {
         id: user.id,
         user_name: user.user_name,
         role: user.role,
+        owner_id: user.owner_id,
       },
       token,
     });
