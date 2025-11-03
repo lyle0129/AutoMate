@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import vehiclesRoutes from "./routes/vehiclesRoutes.js";
 import ownerRoutes from "./routes/ownerRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
+import maintenanceLogRoutes from "./routes/maintenanceLogRoutes.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use("/api/vehicles", vehiclesRoutes);
 app.use("/api/owners", ownerRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/maintenance", maintenanceLogRoutes);
 
 const PORT = process.env.PORT || 5000;
 
