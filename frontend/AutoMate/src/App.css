@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Configure dark mode variant for Tailwind CSS 4.1 */
+@variant dark (&:where(.dark, .dark *));
+
 /* Custom CSS properties for theme variables */
 :root {
   /* Light theme colors */
@@ -17,7 +20,7 @@
 }
 
 /* Dark theme colors */
-:root.dark {
+.dark {
   --color-primary: #60a5fa;
   --color-primary-hover: #3b82f6;
   --color-secondary: #9ca3af;

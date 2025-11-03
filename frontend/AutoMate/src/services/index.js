@@ -1,2 +1,3 @@
 // Export all services from this directory
-// Example: export { default as apiService } from './apiService'
+export { default as authService } from './authService';
+export { default as apiClient, ApiClient, ApiError } from './apiClient';

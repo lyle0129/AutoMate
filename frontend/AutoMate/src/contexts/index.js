@@ -1,2 +1,3 @@
 // Export all contexts from this directory
-// Example: export { AuthProvider, useAuth } from './AuthContext'
+export { AuthProvider, useAuth } from './AuthContext';
+export { ThemeProvider, useTheme } from './ThemeContext';

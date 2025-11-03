@@ -1,2 +1,4 @@
 // Export all pages from this directory
-// Example: export { default as Dashboard } from './Dashboard'
+// Auth Pages
+export { default as Login } from './auth/Login';
+export { default as Register } from './auth/Register';

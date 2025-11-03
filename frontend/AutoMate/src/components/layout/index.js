@@ -1,2 +1,2 @@
 // Export all layout components from this directory
-// Example: export { default as Header } from './Header'
+export { default as ThemeToggle } from './ThemeToggle';
