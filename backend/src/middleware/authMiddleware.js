@@ -27,3 +27,11 @@ export const authorizeRoles = (...allowedRoles) => {
       next();
     };
   };
+
+// Middleware to require admin role
+export const requireAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required' });
+  }
+  next();
+};
