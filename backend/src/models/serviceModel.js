@@ -118,10 +118,10 @@ export const findServiceByName = async (service_name) => {
   }
 };
 
-// Validate service pricing (positive numbers)
+// Validate service pricing (any valid number, including negative for discounts)
 export const validateServicePrice = (price) => {
   const numPrice = parseFloat(price);
-  return !isNaN(numPrice) && numPrice > 0;
+  return !isNaN(numPrice) && isFinite(numPrice);
 };
 
 // Validate vehicle types array

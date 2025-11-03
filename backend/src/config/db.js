@@ -55,7 +55,7 @@ export async function initDB() {
         log_id SERIAL PRIMARY KEY,
         vehicle_id INTEGER REFERENCES vehicles(vehicle_id) ON DELETE CASCADE,
         cost DECIMAL(10,2),
-        description TEXT,
+        description JSONB,
         user_name VARCHAR(100) NOT NULL,
         owner_id INTEGER REFERENCES owners(owner_id) ON DELETE SET NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

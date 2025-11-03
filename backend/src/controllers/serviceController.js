@@ -76,7 +76,7 @@ export const createServiceController = async (req, res) => {
     }
 
     if (!validateServicePrice(price)) {
-      return res.status(400).json({ message: "Service price must be a positive number" });
+      return res.status(400).json({ message: "Service price must be a valid number" });
     }
 
     // Validation - vehicle types array
@@ -139,7 +139,7 @@ export const updateServiceController = async (req, res) => {
 
     // Validation - price if provided
     if (price !== undefined && !validateServicePrice(price)) {
-      return res.status(400).json({ message: "Service price must be a positive number" });
+      return res.status(400).json({ message: "Service price must be a valid number" });
     }
 
     // Validation - vehicle types if provided
