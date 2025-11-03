@@ -96,3 +96,24 @@ export const logout = (req, res) => {
   });
   res.status(200).json({ message: "Logged out successfully" });
 };
+
+// GET current user info (requires authentication)
+export const me = (req, res) => {
+  try {
+    // req.user is set by verifyToken middleware
+    const { id, user_name, role, owner_id } = req.user;
+    
+    res.status(200).json({
+      message: "User authenticated",
+      user: {
+        id,
+        user_name,
+        role,
+        owner_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error getting user info:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

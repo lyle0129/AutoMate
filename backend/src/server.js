@@ -13,7 +13,15 @@ dotenv.config();
 
 
 const app = express();
-app.use(cors());
+
+// CORS configuration for frontend communication with credentials
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'], // Frontend URLs
+  credentials: true, // Allow cookies to be sent
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
