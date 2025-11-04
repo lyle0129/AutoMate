@@ -108,7 +108,7 @@ export const me = (req, res) => {
   try {
     // req.user is set by verifyToken middleware
     const { id, user_name, role, owner_id } = req.user;
-    
+
     res.status(200).json({
       message: "User authenticated",
       user: {
@@ -143,11 +143,11 @@ export const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await findUserById(parseInt(id));
-    
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
     res.status(200).json({
       message: "User retrieved successfully",
       user,
@@ -210,14 +210,14 @@ export const updateUserById = async (req, res) => {
 export const deleteUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // Prevent admin from deleting themselves
     if (req.user.id === parseInt(id)) {
       return res.status(400).json({ message: "Cannot delete your own account" });
     }
 
     const deletedUser = await deleteUser(parseInt(id));
-    
+
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });
     }

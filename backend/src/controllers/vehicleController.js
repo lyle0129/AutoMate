@@ -9,13 +9,20 @@ export const getAllVehicles = async (req, res) => {
     if (role === 'customer') {
       // Customers can only see their own vehicles
       vehicles = await sql`
-        SELECT * FROM vehicles 
-        WHERE owner_id = ${owner_id} 
-        ORDER BY vehicle_id ASC
+        SELECT v.*, o.name as owner_name, o.contact as owner_contact
+        FROM vehicles v
+        LEFT JOIN owners o ON v.owner_id = o.owner_id
+        WHERE v.owner_id = ${owner_id} 
+        ORDER BY v.vehicle_id ASC
       `;
     } else {
-      // Admin or other roles can see all vehicles
-      vehicles = await sql`SELECT * FROM vehicles ORDER BY vehicle_id ASC`;
+      // Admin or other roles can see all vehicles with owner information
+      vehicles = await sql`
+        SELECT v.*, o.name as owner_name, o.contact as owner_contact
+        FROM vehicles v
+        LEFT JOIN owners o ON v.owner_id = o.owner_id
+        ORDER BY v.vehicle_id ASC
+      `;
     }
 
     res.status(200).json(vehicles);
