@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { createUser, findUserByUsername } from "../models/userModel.js";
+import { createUser, findUserByUsername, getAllUsers, findUserById, updateUser, deleteUser } from "../models/userModel.js";
 import { generateToken } from "../utils/jwt.js"; // assuming jwt.js is inside /utils
 
 // REGISTER new user (Admin only)
@@ -120,6 +120,114 @@ export const me = (req, res) => {
     });
   } catch (error) {
     console.error("Error getting user info:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// GET all users (Admin only)
+export const getUsers = async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    res.status(200).json({
+      message: "Users retrieved successfully",
+      users,
+    });
+  } catch (error) {
+    console.error("Error getting users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// GET single user by ID (Admin only)
+export const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await findUserById(parseInt(id));
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.status(200).json({
+      message: "User retrieved successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Error getting user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// UPDATE user (Admin only)
+export const updateUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { user_name, role, owner_id } = req.body;
+
+    if (!user_name || !role) {
+      return res.status(400).json({ message: "Username and role are required" });
+    }
+
+    // Validate role
+    const validRoles = ['admin', 'mechanic', 'customer'];
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ message: "Invalid role. Must be admin, mechanic, or customer" });
+    }
+
+    // Check if username already exists (excluding current user)
+    const existingUser = await findUserByUsername(user_name);
+    if (existingUser && existingUser.id !== parseInt(id)) {
+      return res.status(409).json({ message: "Username already exists" });
+    }
+
+    // Only allow owner_id for customer role
+    let finalOwnerId = null;
+    if (role === 'customer' && owner_id) {
+      finalOwnerId = parseInt(owner_id);
+    }
+
+    const updatedUser = await updateUser(parseInt(id), {
+      user_name,
+      role,
+      owner_id: finalOwnerId,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// DELETE user (Admin only)
+export const deleteUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Prevent admin from deleting themselves
+    if (req.user.id === parseInt(id)) {
+      return res.status(400).json({ message: "Cannot delete your own account" });
+    }
+
+    const deletedUser = await deleteUser(parseInt(id));
+    
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User deleted successfully",
+      user: deletedUser,
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

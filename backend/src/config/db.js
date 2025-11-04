@@ -21,7 +21,8 @@ export async function initDB() {
         user_name VARCHAR(100) UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'mechanic', 'customer')),
-        owner_id INTEGER REFERENCES owners(owner_id) ON DELETE SET NULL
+        owner_id INTEGER REFERENCES owners(owner_id) ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
 
@@ -63,6 +64,59 @@ export async function initDB() {
         paid_using VARCHAR(50) NULL
       )
     `;
+
+    // Create default admin user if no users exist
+    const existingUsers = await sql`SELECT COUNT(*) as count FROM users`;
+    if (existingUsers[0].count === '0') {
+      // Import bcrypt here to avoid circular dependency
+      const bcrypt = await import('bcrypt');
+      const defaultPassword = 'admin123';
+      const hashedPassword = await bcrypt.default.hash(defaultPassword, 10);
+      
+      await sql`
+        INSERT INTO users (user_name, password_hash, role)
+        VALUES ('admin', ${hashedPassword}, 'admin')
+      `;
+      
+      console.log("✅ Default admin user created (username: admin, password: admin123)");
+    }
+
+    // Create sample data if tables are empty
+    const existingOwners = await sql`SELECT COUNT(*) as count FROM owners`;
+    if (existingOwners[0].count === '0') {
+      await sql`
+        INSERT INTO owners (name, contact) VALUES 
+        ('John Smith', '555-0101'),
+        ('Jane Doe', '555-0102'),
+        ('Bob Johnson', '555-0103')
+      `;
+      console.log("✅ Sample owners created");
+    }
+
+    const existingServices = await sql`SELECT COUNT(*) as count FROM services`;
+    if (existingServices[0].count === '0') {
+      await sql`
+        INSERT INTO services (service_name, price, vehicle_types) VALUES 
+        ('Oil Change', 29.99, ARRAY['Car', 'SUV', 'Truck']),
+        ('Brake Inspection', 49.99, ARRAY['Car', 'SUV', 'Truck', 'Motorcycle']),
+        ('Tire Rotation', 19.99, ARRAY['Car', 'SUV', 'Truck']),
+        ('Engine Tune-up', 199.99, ARRAY['Car', 'SUV', 'Truck']),
+        ('Motorcycle Service', 89.99, ARRAY['Motorcycle'])
+      `;
+      console.log("✅ Sample services created");
+    }
+
+    const existingVehicles = await sql`SELECT COUNT(*) as count FROM vehicles`;
+    if (existingVehicles[0].count === '0') {
+      await sql`
+        INSERT INTO vehicles (plate_no, make, model, year, vehicle_type, owner_id) VALUES 
+        ('ABC-123', 'Toyota', 'Camry', 2020, 'Car', 1),
+        ('XYZ-789', 'Ford', 'F-150', 2019, 'Truck', 2),
+        ('DEF-456', 'Honda', 'Civic', 2021, 'Car', 3),
+        ('GHI-012', 'Harley-Davidson', 'Street 750', 2018, 'Motorcycle', 1)
+      `;
+      console.log("✅ Sample vehicles created");
+    }
 
     console.log("✅ Database initialized successfully");
   } catch (error) {
