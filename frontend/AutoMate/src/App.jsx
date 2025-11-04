@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { 
-  Login, 
-  Register, 
-  AdminDashboard, 
-  MechanicDashboard, 
+import {
+  Login,
+  Register,
+  AdminDashboard,
+  MechanicDashboard,
   CustomerDashboard,
   VehicleList,
   VehicleDetail,
@@ -13,18 +13,21 @@ import {
   InvoiceList,
   InvoiceDetail,
   NotFound,
-  Unauthorized 
+  Unauthorized,
+  AdminVehicleList,
+  OwnerList,
+  AdminInvoiceGeneration
 } from './pages';
 import UserManagement from './pages/admin/UserManagement';
 import ServiceManagement from './pages/admin/ServiceManagement';
 import { MaintenanceLogging, InvoiceGeneration } from './pages/mechanic';
 import { Layout } from './components/layout';
-import { 
-  ProtectedRoute, 
+import {
+  ProtectedRoute,
   DashboardRouter,
   AdminRoute,
   MechanicRoute,
-  CustomerRoute 
+  CustomerRoute
 } from './components/routing';
 
 
@@ -41,18 +44,18 @@ function App() {
               <Route path="/login" element={<Login />} />
 
               {/* Root route - redirects to appropriate dashboard */}
-              <Route 
-                path="/" 
+              <Route
+                path="/"
                 element={
                   <ProtectedRoute>
                     <DashboardRouter />
                   </ProtectedRoute>
-                } 
+                }
               />
 
               {/* Protected routes with layout */}
-              <Route 
-                path="/*" 
+              <Route
+                path="/*"
                 element={
                   <ProtectedRoute>
                     <Layout />
@@ -80,6 +83,26 @@ function App() {
                     <ServiceManagement />
                   </AdminRoute>
                 } />
+                <Route path="admin/vehicles" element={
+                  <AdminRoute>
+                    <AdminVehicleList />
+                  </AdminRoute>
+                } />
+                <Route path="admin/owners" element={
+                  <AdminRoute>
+                    <OwnerList />
+                  </AdminRoute>
+                } />
+                <Route path="admin/invoices/new" element={
+                  <AdminRoute>
+                    <AdminInvoiceGeneration />
+                  </AdminRoute>
+                } />
+                <Route path="admin/maintenance" element={
+                  <AdminRoute>
+                    <MaintenanceHistory />
+                  </AdminRoute>
+                } />
 
                 {/* Mechanic routes */}
                 <Route path="mechanic/dashboard" element={
@@ -95,6 +118,21 @@ function App() {
                 <Route path="mechanic/invoices/new" element={
                   <MechanicRoute>
                     <InvoiceGeneration />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/vehicles" element={
+                  <MechanicRoute>
+                    <AdminVehicleList />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/maintenance" element={
+                  <MechanicRoute>
+                    <MaintenanceHistory />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/invoices" element={
+                  <MechanicRoute>
+                    <InvoiceList />
                   </MechanicRoute>
                 } />
 

@@ -20,7 +20,7 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch data from multiple endpoints
         const [vehiclesRes, ownersRes, servicesRes, usersRes] = await Promise.all([
           apiClient.get('/vehicles'),
@@ -140,24 +140,24 @@ const AdminDashboard = () => {
       color: 'blue'
     },
     {
+      title: 'Generate Invoices',
+      description: 'Create invoices for completed work',
+      icon: FileText,
+      action: () => navigate('/admin/invoices/new'),
+      color: 'green'
+    },
+    {
       title: 'Manage Services',
       description: 'Configure repair services and pricing',
       icon: Settings,
       action: () => navigate('/admin/services'),
-      color: 'green'
+      color: 'yellow'
     },
     {
       title: 'Add Vehicle',
       description: 'Register a new vehicle',
       icon: Plus,
       action: () => navigate('/admin/vehicles/new'),
-      color: 'yellow'
-    },
-    {
-      title: 'View Reports',
-      description: 'Generate system reports and analytics',
-      icon: FileText,
-      action: () => navigate('/admin/reports'),
       color: 'purple'
     }
   ];
