@@ -10,6 +10,8 @@ import {
   NotFound,
   Unauthorized 
 } from './pages';
+import UserManagement from './pages/admin/UserManagement';
+import ServiceManagement from './pages/admin/ServiceManagement';
 import { Layout } from './components/layout';
 import { 
   ProtectedRoute, 
@@ -60,6 +62,16 @@ function App() {
                 <Route path="admin/register" element={
                   <AdminRoute>
                     <Register />
+                  </AdminRoute>
+                } />
+                <Route path="admin/users" element={
+                  <AdminRoute>
+                    <UserManagement />
+                  </AdminRoute>
+                } />
+                <Route path="admin/services" element={
+                  <AdminRoute>
+                    <ServiceManagement />
                   </AdminRoute>
                 } />
 
