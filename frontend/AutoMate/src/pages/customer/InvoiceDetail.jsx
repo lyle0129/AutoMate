@@ -267,7 +267,7 @@ const InvoiceDetail = () => {
                                 {services.map((service, index) => (
                                   <div key={index} className="flex justify-between pl-2">
                                     <span>• {service.service_name}</span>
-                                    <span>${parseFloat(service.price).toFixed(2)}</span>
+                                    <span>${parseFloat(service.price || 0).toFixed(2)}</span>
                                   </div>
                                 ))}
                               </div>

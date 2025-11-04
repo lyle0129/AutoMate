@@ -300,7 +300,7 @@ const VehicleDetail = () => {
                               {services
                                 .map(
                                   (service) =>
-                                    `${service.service_name} — $${parseFloat(service.price).toFixed(2)}`
+                                    `${service.service_name} — $${parseFloat(service.price || 0).toFixed(2)}`
                                 )
                                 .join(', ')}
                             </p>

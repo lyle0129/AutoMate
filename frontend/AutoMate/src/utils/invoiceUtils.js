@@ -9,14 +9,14 @@
  * @returns {string} - HTML string for printing
  */
 export const generateInvoiceHTML = (invoice, vehicle) => {
-  const invoiceDate = new Date(invoice.date);
+  const invoiceDate = new Date(invoice.created_at);
   const paidDate = invoice.paid_at ? new Date(invoice.paid_at) : null;
-  
+
   // Handle description that might be an object
-  const description = typeof invoice.description === 'string' ? invoice.description : 
-                     typeof invoice.description === 'object' && invoice.description?.custom_description ? 
-                     invoice.description.custom_description : 'Maintenance Service';
-  
+  const description = typeof invoice.description === 'string' ? invoice.description :
+    typeof invoice.description === 'object' && invoice.description?.custom_description ?
+      invoice.description.custom_description : 'Maintenance Service';
+
   // Get services breakdown
   const services = getServicesBreakdown(invoice.description);
   const hasServices = services.length > 0;
@@ -124,10 +124,10 @@ export const generateInvoiceHTML = (invoice, vehicle) => {
             <h3>Invoice Details</h3>
             <p><strong>Invoice Number:</strong> #${invoice.log_id}</p>
             <p><strong>Service Date:</strong> ${invoiceDate.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}</p>
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })}</p>
             <p><strong>Technician:</strong> ${invoice.user_name}</p>
           </div>
           
@@ -158,7 +158,7 @@ export const generateInvoiceHTML = (invoice, vehicle) => {
                       ${services.map(service => `
                         <div style="display: flex; justify-content: space-between; padding-left: 8px; margin-bottom: 2px;">
                           <span>• ${service.service_name}</span>
-                          <span>$${parseFloat(service.price).toFixed(2)}</span>
+                          <span>$${parseFloat(service.price || 0).toFixed(2)}</span>
                         </div>
                       `).join('')}
                     </div>
@@ -182,10 +182,10 @@ export const generateInvoiceHTML = (invoice, vehicle) => {
             </p>
             ${invoice.paid_at ? `
               <p><strong>Payment Date:</strong> ${paidDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}</p>
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })}</p>
             ` : ''}
             ${invoice.paid_using ? `
               <p><strong>Payment Method:</strong> ${invoice.paid_using.replace('_', ' ').toUpperCase()}</p>
@@ -210,7 +210,7 @@ export const generateInvoiceHTML = (invoice, vehicle) => {
 export const printInvoice = (invoice, vehicle) => {
   const printWindow = window.open('', '_blank');
   const invoiceHTML = generateInvoiceHTML(invoice, vehicle);
-  
+
   printWindow.document.write(invoiceHTML);
   printWindow.document.close();
   printWindow.print();

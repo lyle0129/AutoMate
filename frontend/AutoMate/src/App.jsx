@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { 
@@ -17,6 +17,7 @@ import {
 } from './pages';
 import UserManagement from './pages/admin/UserManagement';
 import ServiceManagement from './pages/admin/ServiceManagement';
+import { MaintenanceLogging, InvoiceGeneration } from './pages/mechanic';
 import { Layout } from './components/layout';
 import { 
   ProtectedRoute, 
@@ -84,6 +85,16 @@ function App() {
                 <Route path="mechanic/dashboard" element={
                   <MechanicRoute>
                     <MechanicDashboard />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/maintenance/new" element={
+                  <MechanicRoute>
+                    <MaintenanceLogging />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/invoices/new" element={
+                  <MechanicRoute>
+                    <InvoiceGeneration />
                   </MechanicRoute>
                 } />
 

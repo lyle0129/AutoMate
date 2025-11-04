@@ -156,6 +156,30 @@ export const useMaintenance = () => {
     }
   }, []);
 
+  const markAsPaid = useCallback(async (id, paymentMethod) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await maintenanceService.markAsPaid(id, paymentMethod);
+      // Update the maintenance log in the local state
+      setMaintenanceLogs(prev => prev.map(log => 
+        log.log_id === parseInt(id) 
+          ? { ...log, paid_at: new Date().toISOString(), paid_using: paymentMethod }
+          : log
+      ));
+      return data;
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Failed to mark maintenance log as paid');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const clearError = useCallback(() => {
     setError(null);
   }, []);
@@ -172,6 +196,7 @@ export const useMaintenance = () => {
     getPaidMaintenanceLogs,
     getPaymentSummary,
     createMaintenanceLog,
+    markAsPaid,
     clearError
   };
 };

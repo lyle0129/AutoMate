@@ -315,7 +315,7 @@ const MaintenanceHistory = () => {
                                 <span className="text-gray-500 dark:text-gray-500 mr-1">Service Breakdown:</span>
                                 {services.map((service, index) => (
                                   <span key={index} className="mr-3">
-                                    {service.service_name} — ${parseFloat(service.price).toFixed(2)}
+                                    {service.service_name} — ${parseFloat(service.price || 0).toFixed(2)}
                                     {index < services.length - 1 ? ',' : ''}
                                   </span>
                                 ))}
