@@ -13,7 +13,7 @@ const Modal = ({
   footer,
   className = ''
 }) => {
-  // Handle escape key press
+  // Handle Escape key press
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape' && isOpen) {
@@ -23,7 +23,6 @@ const Modal = ({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
     }
 
@@ -40,7 +39,7 @@ const Modal = ({
     md: 'max-w-lg',
     lg: 'max-w-2xl',
     xl: 'max-w-4xl',
-    full: 'max-w-full mx-4'
+    full: 'max-w-full mx-4',
   };
 
   const handleOverlayClick = (e) => {
@@ -51,79 +50,59 @@ const Modal = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 overflow-y-auto"
-      aria-labelledby="modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center"
       role="dialog"
       aria-modal="true"
+      onClick={handleOverlayClick}
     >
-      {/* Backdrop */}
+      {/* Overlay */}
       <div 
-        className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-        onClick={handleOverlayClick}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn"
+        aria-hidden="true"
+      />
+
+      {/* Modal Panel */}
+      <div
+        className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transform transition-all animate-scaleIn w-full ${sizeClasses[size]} mx-4 sm:mx-0 ${className}`}
       >
-        <div 
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-          aria-hidden="true"
-        />
-
-        {/* Center modal */}
-        <span 
-          className="hidden sm:inline-block sm:align-middle sm:h-screen" 
-          aria-hidden="true"
-        >
-          &#8203;
-        </span>
-
-        {/* Modal panel */}
-        <div 
-          className={`
-            inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left 
-            overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:p-6 
-            w-full ${sizeClasses[size]} ${className}
-          `}
-        >
-          {/* Header */}
-          {(title || showCloseButton) && (
-            <div className="flex items-center justify-between mb-4">
-              {title && (
-                <h3 
-                  className="text-lg font-medium text-gray-900 dark:text-white"
-                  id="modal-title"
-                >
-                  {title}
-                </h3>
-              )}
-              {showCloseButton && (
-                <button
-                  type="button"
-                  className="rounded-md text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onClick={onClose}
-                  aria-label="Close modal"
-                >
-                  <X size={20} />
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="text-gray-700 dark:text-gray-300">
-            {children}
+        {/* Header */}
+        {(title || showCloseButton) && (
+          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+            {title && (
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100" id="modal-title">
+                {title}
+              </h3>
+            )}
+            {showCloseButton && (
+              <button
+                type="button"
+                className="rounded-md text-gray-400 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={onClose}
+                aria-label="Close modal"
+              >
+                <X size={20} />
+              </button>
+            )}
           </div>
+        )}
 
-          {/* Footer */}
-          {footer && (
-            <div className="mt-6 flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-              {footer}
-            </div>
-          )}
+        {/* Content */}
+        <div className="px-6 py-5 text-gray-700 dark:text-gray-300">
+          {children}
         </div>
+
+        {/* Footer */}
+        {footer && (
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-// Predefined modal variants for common use cases
+// Confirm Modal Variant
 export const ConfirmModal = ({ 
   isOpen, 
   onClose, 
