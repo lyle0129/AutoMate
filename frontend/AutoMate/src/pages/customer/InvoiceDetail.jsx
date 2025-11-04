@@ -3,12 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate } from '../../utils/dateUtils';
-import { printInvoice } from '../../utils/invoiceUtils';
-import { 
-  ArrowLeft, 
-  FileText, 
-  Download, 
-  Calendar, 
+import { printInvoice, formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
+import {
+  ArrowLeft,
+  FileText,
+  Download,
+  Calendar,
   Car,
   User,
   CheckCircle,
@@ -24,7 +24,7 @@ const InvoiceDetail = () => {
   const { invoiceId } = useParams();
   const { vehicles, loading: vehiclesLoading, fetchVehicles } = useVehicles();
   const { getMaintenanceLogById, loading: maintenanceLoading, error: maintenanceError } = useMaintenance();
-  
+
   const [invoice, setInvoice] = useState(null);
   const [vehicle, setVehicle] = useState(null);
 
@@ -117,7 +117,7 @@ const InvoiceDetail = () => {
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Invoices
         </Link>
-        
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -127,7 +127,7 @@ const InvoiceDetail = () => {
               Service invoice details and payment information
             </p>
           </div>
-          
+
           <div className="flex space-x-3">
             <button
               onClick={handlePrint}
@@ -177,7 +177,7 @@ const InvoiceDetail = () => {
                     <p className="font-medium text-gray-900 dark:text-white print:text-gray-900">#{invoice.log_id}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center">
                   <Calendar className="h-5 w-5 text-gray-400 mr-3 print:hidden" />
                   <div>
@@ -187,7 +187,7 @@ const InvoiceDetail = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center">
                   <User className="h-5 w-5 text-gray-400 mr-3 print:hidden" />
                   <div>
@@ -213,14 +213,14 @@ const InvoiceDetail = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 {vehicle && (
                   <>
                     <div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 print:text-gray-600">License Plate</p>
                       <p className="font-medium text-gray-900 dark:text-white print:text-gray-900">{vehicle.plate_no}</p>
                     </div>
-                    
+
                     <div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 print:text-gray-600">Vehicle Type</p>
                       <p className="font-medium text-gray-900 dark:text-white print:text-gray-900">{vehicle.vehicle_type}</p>
@@ -254,9 +254,28 @@ const InvoiceDetail = () => {
                 <tbody className="bg-white dark:bg-gray-800 print:bg-white">
                   <tr>
                     <td className="px-6 py-4 text-sm text-gray-900 dark:text-white print:text-gray-900 border-b border-gray-200 dark:border-gray-700 print:border-gray-300">
-                      {typeof invoice.description === 'string' ? invoice.description : 
-                       typeof invoice.description === 'object' && invoice.description?.custom_description ? 
-                       invoice.description.custom_description : 'Maintenance Service'}
+                      <div>
+                        <div className="font-medium mb-2">
+                          {formatInvoiceDescription(invoice.description)}
+                        </div>
+                        {(() => {
+                          const services = getServicesBreakdown(invoice.description);
+                          if (services.length > 0) {
+                            return (
+                              <div className="space-y-1 text-sm">
+                                <div className="font-medium text-gray-600 dark:text-gray-400 print:text-gray-600">Service Breakdown:</div>
+                                {services.map((service, index) => (
+                                  <div key={index} className="flex justify-between pl-2">
+                                    <span>• {service.service_name}</span>
+                                    <span>${parseFloat(service.price).toFixed(2)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900 dark:text-white print:text-gray-900 border-b border-gray-200 dark:border-gray-700 print:border-gray-300">
                       {invoiceDate ? formatDate(invoiceDate) : 'Invalid Date'}
@@ -301,15 +320,14 @@ const InvoiceDetail = () => {
                 ) : (
                   <Clock className="h-6 w-6 text-yellow-600 dark:text-yellow-400 print:hidden" />
                 )}
-                <span className={`text-lg font-bold ${
-                  invoice.paid_at ? 
-                    'text-green-600 dark:text-green-400 print:text-green-600' : 
-                    'text-yellow-600 dark:text-yellow-400 print:text-yellow-600'
-                }`}>
+                <span className={`text-lg font-bold ${invoice.paid_at ?
+                  'text-green-600 dark:text-green-400 print:text-green-600' :
+                  'text-yellow-600 dark:text-yellow-400 print:text-yellow-600'
+                  }`}>
                   Status: {invoice.paid_at ? 'PAID' : 'UNPAID'}
                 </span>
               </div>
-              
+
               {paidDate && (
                 <div className="mt-2 text-sm text-gray-600 dark:text-gray-400 print:text-gray-600">
                   <p>Payment Date: {formatDate(paidDate)}</p>

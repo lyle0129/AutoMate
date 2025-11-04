@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate, daysBetween, daysAgo } from '../../utils/dateUtils';
+import { formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
 import { 
   ArrowLeft, 
   Calendar, 
@@ -67,11 +68,13 @@ const MaintenanceHistory = () => {
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(log => {
-        const description = typeof log.description === 'string' ? log.description : 
-                           typeof log.description === 'object' && log.description?.custom_description ? 
-                           log.description.custom_description : '';
+        const description = formatInvoiceDescription(log.description);
+        const services = getServicesBreakdown(log.description);
+        const servicesList = formatServicesList(services);
+        
         return (
           (description && description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (servicesList && servicesList.toLowerCase().includes(searchTerm.toLowerCase())) ||
           log.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (log.cost && log.cost.toString().includes(searchTerm))
         );
@@ -296,14 +299,33 @@ const MaintenanceHistory = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       {/* Service Header */}
-                      <div className="flex items-center mb-2">
-                        <Wrench className="h-5 w-5 text-gray-400 mr-2" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                          {typeof log.description === 'string' ? log.description : 
-                           typeof log.description === 'object' && log.description?.custom_description ? 
-                           log.description.custom_description : 'Maintenance Service'}
-                        </h3>
+                      <div className="flex flex-col mb-2">
+                        <div className="flex items-center">
+                          <Wrench className="h-5 w-5 text-gray-400 mr-2" />
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                            {formatInvoiceDescription(log.description)}
+                          </h3>
+                        </div>
+
+                        {(() => {
+                          const services = getServicesBreakdown(log.description);
+                          if (services.length > 0) {
+                            return (
+                              <p className="mt-1 text-xs text-gray-600 dark:text-gray-400 font-medium flex flex-wrap items-center">
+                                <span className="text-gray-500 dark:text-gray-500 mr-1">Service Breakdown:</span>
+                                {services.map((service, index) => (
+                                  <span key={index} className="mr-3">
+                                    {service.service_name} — ${parseFloat(service.price).toFixed(2)}
+                                    {index < services.length - 1 ? ',' : ''}
+                                  </span>
+                                ))}
+                              </p>
+                            );
+                          }
+                          return null;
+                        })()}
                       </div>
+
 
                       {/* Service Details */}
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">

@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, daysBetween, formatDate } from '../../utils/dateUtils';
+import { formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
 import { Car, Calendar, Receipt, AlertTriangle, Eye, FileText, Wrench } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -298,10 +299,19 @@ const CustomerDashboard = () => {
                 <div key={log.log_id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">
-                      {typeof log.description === 'string' ? log.description : 
-                       typeof log.description === 'object' && log.description?.custom_description ? 
-                       log.description.custom_description : 'Maintenance Service'}
+                      {formatInvoiceDescription(log.description)}
                     </p>
+                    {(() => {
+                      const services = getServicesBreakdown(log.description);
+                      if (services.length > 0) {
+                        return (
+                          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                            Services: {formatServicesList(services)}
+                          </p>
+                        );
+                      }
+                      return null;
+                    })()}
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {vehicle ? `${vehicle.make} ${vehicle.model} (${vehicle.plate_no})` : 'Unknown Vehicle'}
                     </p>

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate, daysBetween } from '../../utils/dateUtils';
+import { formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
 import { 
   Car, 
   Calendar, 
@@ -282,14 +283,33 @@ const VehicleDetail = () => {
                     className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
                   >
                     <div className="flex-1">
-                      <div className="flex items-center mb-2">
-                        <Wrench className="h-4 w-4 text-gray-400 mr-2" />
+                     <div className="mb-2">
+                      <div className="flex items-center">
+                        <Wrench className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
                         <p className="font-medium text-gray-900 dark:text-white">
-                          {typeof log.description === 'string' ? log.description : 
-                           typeof log.description === 'object' && log.description?.custom_description ? 
-                           log.description.custom_description : 'Maintenance Service'}
+                          {formatInvoiceDescription(log.description)}
                         </p>
                       </div>
+
+                      {(() => {
+                        const services = getServicesBreakdown(log.description);
+                        if (services.length > 0) {
+                          return (
+                            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                              <span className="text-gray-500 dark:text-gray-500 font-medium">Services:</span>{' '}
+                              {services
+                                .map(
+                                  (service) =>
+                                    `${service.service_name} — $${parseFloat(service.price).toFixed(2)}`
+                                )
+                                .join(', ')}
+                            </p>
+                          );
+                        }
+                        return null;
+                      })()}
+                    </div>
+
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Performed by: {log.user_name}
                       </p>

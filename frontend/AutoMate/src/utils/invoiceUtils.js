@@ -16,6 +16,10 @@ export const generateInvoiceHTML = (invoice, vehicle) => {
   const description = typeof invoice.description === 'string' ? invoice.description : 
                      typeof invoice.description === 'object' && invoice.description?.custom_description ? 
                      invoice.description.custom_description : 'Maintenance Service';
+  
+  // Get services breakdown
+  const services = getServicesBreakdown(invoice.description);
+  const hasServices = services.length > 0;
 
   return `
     <!DOCTYPE html>
@@ -145,7 +149,22 @@ export const generateInvoiceHTML = (invoice, vehicle) => {
           </thead>
           <tbody>
             <tr>
-              <td>${description}</td>
+              <td>
+                <div>
+                  <div style="font-weight: bold; margin-bottom: 8px;">${description}</div>
+                  ${hasServices ? `
+                    <div style="font-size: 14px; color: #666;">
+                      <div style="font-weight: bold; margin-bottom: 4px;">Service Breakdown:</div>
+                      ${services.map(service => `
+                        <div style="display: flex; justify-content: space-between; padding-left: 8px; margin-bottom: 2px;">
+                          <span>• ${service.service_name}</span>
+                          <span>$${parseFloat(service.price).toFixed(2)}</span>
+                        </div>
+                      `).join('')}
+                    </div>
+                  ` : ''}
+                </div>
+              </td>
               <td>${invoiceDate.toLocaleDateString()}</td>
               <td>$${parseFloat(invoice.cost).toFixed(2)}</td>
             </tr>
@@ -210,4 +229,40 @@ export const formatInvoiceDescription = (description) => {
     return description.custom_description;
   }
   return 'Maintenance Service';
+};
+
+/**
+ * Get services breakdown from description
+ * @param {string|Object} description - The description field from the invoice
+ * @returns {Array} - Array of services or empty array
+ */
+export const getServicesBreakdown = (description) => {
+  if (typeof description === 'object' && description?.services && Array.isArray(description.services)) {
+    return description.services;
+  }
+  return [];
+};
+
+/**
+ * Format service list for display
+ * @param {Array} services - Array of service objects
+ * @returns {string} - Formatted service list
+ */
+export const formatServicesList = (services) => {
+  if (!services || services.length === 0) {
+    return '';
+  }
+  return services.map(service => service.service_name).join(', ');
+};
+
+/**
+ * Calculate total from services
+ * @param {Array} services - Array of service objects
+ * @returns {number} - Total price from services
+ */
+export const calculateServicesTotal = (services) => {
+  if (!services || services.length === 0) {
+    return 0;
+  }
+  return services.reduce((total, service) => total + (parseFloat(service.price) || 0), 0);
 };

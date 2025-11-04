@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate, formatDateShort, daysBetween, daysAgo } from '../../utils/dateUtils';
-import { printInvoice, formatInvoiceDescription } from '../../utils/invoiceUtils';
+import { printInvoice, formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
 import { 
   FileText, 
   Download, 
@@ -85,11 +85,13 @@ const InvoiceList = () => {
     if (searchTerm) {
       filtered = filtered.filter(invoice => {
         const vehicle = vehicles.find(v => v.vehicle_id === invoice.vehicle_id);
-        const description = typeof invoice.description === 'string' ? invoice.description : 
-                           typeof invoice.description === 'object' && invoice.description?.custom_description ? 
-                           invoice.description.custom_description : '';
+        const description = formatInvoiceDescription(invoice.description);
+        const services = getServicesBreakdown(invoice.description);
+        const servicesList = formatServicesList(services);
+        
         return (
           (description && description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (servicesList && servicesList.toLowerCase().includes(searchTerm.toLowerCase())) ||
           invoice.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (vehicle && (
             vehicle.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -369,10 +371,19 @@ const InvoiceList = () => {
                         <div>
                           <p className="text-gray-600 dark:text-gray-400">Service</p>
                           <p className="font-medium text-gray-900 dark:text-white">
-                            {typeof invoice.description === 'string' ? invoice.description : 
-                             typeof invoice.description === 'object' && invoice.description?.custom_description ? 
-                             invoice.description.custom_description : 'Maintenance Service'}
+                            {formatInvoiceDescription(invoice.description)}
                           </p>
+                          {(() => {
+                            const services = getServicesBreakdown(invoice.description);
+                            if (services.length > 0) {
+                              return (
+                                <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                  Services: {formatServicesList(services)}
+                                </p>
+                              );
+                            }
+                            return null;
+                          })()}
                         </div>
                         
                         <div>
