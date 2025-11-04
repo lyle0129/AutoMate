@@ -6,5 +6,8 @@ export { default as Register } from './auth/Register';
 // Dashboard Pages
 export { AdminDashboard, MechanicDashboard, CustomerDashboard } from './dashboard';
 
+// Customer Pages
+export { VehicleList, VehicleDetail, MaintenanceHistory, InvoiceList, InvoiceDetail } from './customer';
+
 // Error Pages
 export { NotFound, Unauthorized } from './error';

@@ -7,6 +7,11 @@ import {
   AdminDashboard, 
   MechanicDashboard, 
   CustomerDashboard,
+  VehicleList,
+  VehicleDetail,
+  MaintenanceHistory,
+  InvoiceList,
+  InvoiceDetail,
   NotFound,
   Unauthorized 
 } from './pages';
@@ -86,6 +91,36 @@ function App() {
                 <Route path="customer/dashboard" element={
                   <CustomerRoute>
                     <CustomerDashboard />
+                  </CustomerRoute>
+                } />
+                <Route path="customer/vehicles" element={
+                  <CustomerRoute>
+                    <VehicleList />
+                  </CustomerRoute>
+                } />
+                <Route path="customer/vehicles/:vehicleId" element={
+                  <CustomerRoute>
+                    <VehicleDetail />
+                  </CustomerRoute>
+                } />
+                <Route path="customer/vehicles/:vehicleId/maintenance" element={
+                  <CustomerRoute>
+                    <MaintenanceHistory />
+                  </CustomerRoute>
+                } />
+                <Route path="customer/maintenance" element={
+                  <CustomerRoute>
+                    <MaintenanceHistory />
+                  </CustomerRoute>
+                } />
+                <Route path="customer/invoices" element={
+                  <CustomerRoute>
+                    <InvoiceList />
+                  </CustomerRoute>
+                } />
+                <Route path="customer/invoices/:invoiceId" element={
+                  <CustomerRoute>
+                    <InvoiceDetail />
                   </CustomerRoute>
                 } />
 
