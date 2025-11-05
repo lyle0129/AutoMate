@@ -4,7 +4,7 @@ import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, daysBetween, formatDate } from '../../utils/dateUtils';
 import { formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
-import { Car, Calendar, Receipt, AlertTriangle, Eye, FileText, Wrench } from 'lucide-react';
+import { Car, Calendar, Receipt, AlertTriangle, Eye, FileText, Wrench, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 /**
@@ -345,7 +345,7 @@ const CustomerDashboard = () => {
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link 
             to="/customer/vehicles" 
             className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-left transition-colors block"
@@ -377,6 +377,17 @@ const CustomerDashboard = () => {
               <h3 className="font-medium text-gray-900 dark:text-white">View Invoices</h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Download and print invoices</p>
+          </Link>
+          
+          <Link 
+            to="/customer/settings" 
+            className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-left transition-colors block"
+          >
+            <div className="flex items-center mb-2">
+              <User className="h-5 w-5 text-orange-600 dark:text-orange-400 mr-2" />
+              <h3 className="font-medium text-gray-900 dark:text-white">Account Settings</h3>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Update username and password</p>
           </Link>
         </div>
       </div>

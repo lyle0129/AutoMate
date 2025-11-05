@@ -18,6 +18,7 @@ import {
   OwnerList,
   AdminInvoiceGeneration
 } from './pages';
+import AccountSettings from './pages/customer/AccountSettings';
 import UserManagement from './pages/admin/UserManagement';
 import ServiceManagement from './pages/admin/ServiceManagement';
 import MaintenanceManagement from './pages/admin/MaintenanceManagement';
@@ -176,6 +177,11 @@ function App() {
                 <Route path="customer/invoices/:invoiceId" element={
                   <CustomerRoute>
                     <InvoiceDetail />
+                  </CustomerRoute>
+                } />
+                <Route path="customer/settings" element={
+                  <CustomerRoute>
+                    <AccountSettings />
                   </CustomerRoute>
                 } />
 

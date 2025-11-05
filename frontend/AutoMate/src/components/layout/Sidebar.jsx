@@ -118,6 +118,12 @@ const getMenuItems = (userRole) => {
         href: '/customer/invoices',
         icon: Receipt,
         description: 'View and print your invoices'
+      },
+      {
+        name: 'Account Settings',
+        href: '/customer/settings',
+        icon: Settings,
+        description: 'Update your username and password'
       }
     ]
   };

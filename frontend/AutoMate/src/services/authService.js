@@ -37,6 +37,11 @@ export const logoutUser = async () => {
   return handleApiResponse(() => apiClient.post('/auth/logout'));
 };
 
+// Update user profile
+export const updateProfile = async (profileData) => {
+  return handleApiResponse(() => apiClient.put('/auth/profile', profileData));
+};
+
 // Check authentication status
 export const checkAuthStatus = async () => {
   try {
@@ -108,6 +113,7 @@ export default {
   loginUser,
   registerUser,
   logoutUser,
+  updateProfile,
   checkAuthStatus,
   storeUserData,
   clearUserData,

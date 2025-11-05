@@ -18,6 +18,7 @@ const AUTH_ACTIONS = {
   CHECK_AUTH_START: 'CHECK_AUTH_START',
   CHECK_AUTH_SUCCESS: 'CHECK_AUTH_SUCCESS',
   CHECK_AUTH_FAILURE: 'CHECK_AUTH_FAILURE',
+  UPDATE_USER: 'UPDATE_USER',
   CLEAR_ERROR: 'CLEAR_ERROR',
 };
 
@@ -69,6 +70,11 @@ const authReducer = (state, action) => {
         isAuthenticated: false,
         isLoading: false,
         error: null,
+      };
+    case AUTH_ACTIONS.UPDATE_USER:
+      return {
+        ...state,
+        user: action.payload,
       };
     case AUTH_ACTIONS.CLEAR_ERROR:
       return {
@@ -170,6 +176,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Update user function
+  const updateUser = (userData) => {
+    dispatch({ 
+      type: AUTH_ACTIONS.UPDATE_USER, 
+      payload: userData 
+    });
+    storeUserData(userData);
+  };
+
   // Clear error function
   const clearError = () => {
     dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
@@ -184,6 +199,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
     clearError,
     checkAuthStatus: verifyAuthStatus,
   };
