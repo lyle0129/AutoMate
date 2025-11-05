@@ -156,6 +156,48 @@ export const useMaintenance = () => {
     }
   }, []);
 
+  const updateMaintenanceLog = useCallback(async (id, logData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await maintenanceService.updateMaintenanceLog(id, logData);
+      // Update the maintenance log in the local state
+      setMaintenanceLogs(prev => prev.map(log => 
+        (log.log_id || log.id) === parseInt(id) ? { ...log, ...data } : log
+      ));
+      return data;
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Failed to update maintenance log');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const deleteMaintenanceLog = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await maintenanceService.deleteMaintenanceLog(id);
+      // Remove the maintenance log from the local state
+      setMaintenanceLogs(prev => prev.filter(log => (log.log_id || log.id) !== parseInt(id)));
+      return data;
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Failed to delete maintenance log');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const markAsPaid = useCallback(async (id, paymentMethod) => {
     setLoading(true);
     setError(null);
@@ -196,6 +238,8 @@ export const useMaintenance = () => {
     getPaidMaintenanceLogs,
     getPaymentSummary,
     createMaintenanceLog,
+    updateMaintenanceLog,
+    deleteMaintenanceLog,
     markAsPaid,
     clearError
   };

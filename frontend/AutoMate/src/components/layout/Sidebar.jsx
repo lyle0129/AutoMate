@@ -1,11 +1,11 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { 
-  Home, 
-  Users, 
-  Car, 
-  Wrench, 
-  FileText, 
-  Settings, 
+import {
+  Home,
+  Users,
+  Car,
+  Wrench,
+  FileText,
+  Settings,
   BarChart3,
   UserCog,
   ClipboardList,
@@ -19,97 +19,103 @@ import { useAuth } from '../../hooks/useAuth';
 const getMenuItems = (userRole) => {
   const menuItems = {
     admin: [
-      { 
-        name: 'Dashboard', 
-        href: '/admin/dashboard', 
+      {
+        name: 'Dashboard',
+        href: '/admin/dashboard',
         icon: Home,
         description: 'System overview and statistics'
       },
-      { 
-        name: 'User Management', 
-        href: '/admin/users', 
+      {
+        name: 'User Management',
+        href: '/admin/users',
         icon: Users,
         description: 'Manage system users and roles'
       },
-      { 
-        name: 'Vehicle Management', 
-        href: '/admin/vehicles', 
+      {
+        name: 'Vehicle Management',
+        href: '/admin/vehicles',
         icon: Car,
         description: 'Manage all vehicles in the system'
       },
-      { 
-        name: 'Owner Management', 
-        href: '/admin/owners', 
+      {
+        name: 'Owner Management',
+        href: '/admin/owners',
         icon: UserCog,
         description: 'Manage vehicle owners'
       },
-      { 
-        name: 'Service Management', 
-        href: '/admin/services', 
+      {
+        name: 'Service Management',
+        href: '/admin/services',
         icon: Settings,
         description: 'Define and manage repair services'
       },
-      { 
-        name: 'Maintenance Logs', 
-        href: '/admin/maintenance', 
+      {
+        name: 'Maintenance Management',
+        href: '/admin/maintenance-management',
+        icon: Wrench,
+        description: 'Manage maintenance logs with full CRUD operations'
+      },
+      {
+        name: 'Maintenance Logs',
+        href: '/admin/maintenance',
         icon: ClipboardList,
         description: 'View all maintenance records'
       },
-      { 
-        name: 'Reports', 
-        href: '/admin/reports', 
+      {
+        name: 'Reports',
+        href: '/admin/reports',
         icon: BarChart3,
         description: 'System reports and analytics'
       }
     ],
     mechanic: [
-      { 
-        name: 'Dashboard', 
-        href: '/mechanic/dashboard', 
+      {
+        name: 'Dashboard',
+        href: '/mechanic/dashboard',
         icon: Home,
         description: 'Your work queue and activities'
       },
-      { 
-        name: 'Vehicles', 
-        href: '/mechanic/vehicles', 
+      {
+        name: 'Vehicles',
+        href: '/mechanic/vehicles',
         icon: Car,
         description: 'Search and manage vehicles'
       },
-      { 
-        name: 'Maintenance Logs', 
-        href: '/mechanic/maintenance', 
+      {
+        name: 'Maintenance Logs',
+        href: '/mechanic/maintenance',
         icon: Wrench,
         description: 'Create and view maintenance records'
       },
-      { 
-        name: 'Invoices', 
-        href: '/mechanic/invoices', 
+      {
+        name: 'Invoices',
+        href: '/mechanic/invoices',
         icon: Receipt,
         description: 'Generate and manage invoices'
       }
     ],
     customer: [
-      { 
-        name: 'Dashboard', 
-        href: '/customer/dashboard', 
+      {
+        name: 'Dashboard',
+        href: '/customer/dashboard',
         icon: Home,
         description: 'Your vehicles overview'
       },
-      { 
-        name: 'My Vehicles', 
-        href: '/customer/vehicles', 
+      {
+        name: 'My Vehicles',
+        href: '/customer/vehicles',
         icon: Car,
         description: 'View your vehicles and their status'
       },
-      { 
-        name: 'Maintenance History', 
-        href: '/customer/maintenance', 
+      {
+        name: 'Maintenance History',
+        href: '/customer/maintenance',
         icon: FileText,
         description: 'View maintenance records for your vehicles'
       },
-      { 
-        name: 'Invoices', 
-        href: '/customer/invoices', 
+      {
+        name: 'Invoices',
+        href: '/customer/invoices',
         icon: Receipt,
         description: 'View and print your invoices'
       }
@@ -128,7 +134,7 @@ const getMenuItems = (userRole) => {
 const Sidebar = ({ isOpen, onClose }) => {
   const { user } = useAuth();
   const location = useLocation();
-  
+
   const menuItems = getMenuItems(user?.role);
 
   const isActiveLink = (href) => {
@@ -139,7 +145,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 z-30 bg-black bg-opacity-50"
           onClick={onClose}
         />
@@ -148,7 +154,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Sidebar */}
       <aside className={`
         fixed lg:static inset-y-0 left-0 z-40
-        w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
+        w-64 min-h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         flex flex-col
@@ -165,7 +171,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = isActiveLink(item.href);
-            
+
             return (
               <NavLink
                 key={item.name}
@@ -173,8 +179,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                 onClick={onClose} // Close mobile menu when link is clicked
                 className={`
                   flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
-                  ${isActive 
-                    ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200' 
+                  ${isActive
+                    ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                   }
                 `}
@@ -182,8 +188,8 @@ const Sidebar = ({ isOpen, onClose }) => {
               >
                 <Icon className={`
                   h-5 w-5 mr-3 flex-shrink-0
-                  ${isActive 
-                    ? 'text-blue-600 dark:text-blue-300' 
+                  ${isActive
+                    ? 'text-blue-600 dark:text-blue-300'
                     : 'text-gray-500 dark:text-gray-400'
                   }
                 `} />

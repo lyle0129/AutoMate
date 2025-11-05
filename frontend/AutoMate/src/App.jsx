@@ -20,6 +20,7 @@ import {
 } from './pages';
 import UserManagement from './pages/admin/UserManagement';
 import ServiceManagement from './pages/admin/ServiceManagement';
+import MaintenanceManagement from './pages/admin/MaintenanceManagement';
 import { MaintenanceLogging, InvoiceGeneration } from './pages/mechanic';
 import { Layout } from './components/layout';
 import {
@@ -101,6 +102,11 @@ function App() {
                 <Route path="admin/maintenance" element={
                   <AdminRoute>
                     <MaintenanceHistory />
+                  </AdminRoute>
+                } />
+                <Route path="admin/maintenance-management" element={
+                  <AdminRoute>
+                    <MaintenanceManagement />
                   </AdminRoute>
                 } />
 
