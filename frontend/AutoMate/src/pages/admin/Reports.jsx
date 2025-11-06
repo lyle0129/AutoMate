@@ -196,16 +196,39 @@ const Reports = () => {
         const serviceStats = {};
         filteredLogs.forEach(log => {
             const services = getServicesBreakdown(log.description);
-            services.forEach(service => {
-                if (!serviceStats[service]) {
-                    serviceStats[service] = {
-                        count: 0,
-                        revenue: 0
-                    };
-                }
-                serviceStats[service].count++;
-                serviceStats[service].revenue += parseFloat(log.cost) || 0;
-            });
+
+            if (services.length > 0) {
+                // Use individual service prices from the services array
+                services.forEach(service => {
+                    const serviceName = service.service_name || service;
+                    const servicePrice = parseFloat(service.price) || 0;
+
+                    if (!serviceStats[serviceName]) {
+                        serviceStats[serviceName] = {
+                            count: 0,
+                            revenue: 0
+                        };
+                    }
+                    serviceStats[serviceName].count++;
+                    serviceStats[serviceName].revenue += servicePrice;
+                });
+            } else if (typeof log.description === 'string') {
+                // Fallback for string descriptions - split total cost evenly
+                const serviceNames = log.description.split(/[,;]/).map(s => s.trim()).filter(s => s);
+                const totalCost = parseFloat(log.cost) || 0;
+                const costPerService = serviceNames.length > 0 ? totalCost / serviceNames.length : 0;
+
+                serviceNames.forEach(serviceName => {
+                    if (!serviceStats[serviceName]) {
+                        serviceStats[serviceName] = {
+                            count: 0,
+                            revenue: 0
+                        };
+                    }
+                    serviceStats[serviceName].count++;
+                    serviceStats[serviceName].revenue += costPerService;
+                });
+            }
         });
 
         return {
@@ -583,9 +606,9 @@ const Reports = () => {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Revenue Generated
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Avg. Job Value
-                                    </th>
+                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -602,9 +625,9 @@ const Reports = () => {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                 ${stats.revenue.toFixed(2)}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                 ${(stats.revenue / stats.count).toFixed(2)}
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     ))}
                             </tbody>
@@ -634,9 +657,9 @@ const Reports = () => {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Revenue
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Avg. Cost
-                                    </th>
+                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -653,9 +676,9 @@ const Reports = () => {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                 ${stats.revenue.toFixed(2)}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                 ${(stats.revenue / stats.count).toFixed(2)}
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     ))}
                             </tbody>
