@@ -5,7 +5,7 @@ import ProfileUpdateForm from '../../components/forms/ProfileUpdateForm';
 import { User, CheckCircle } from 'lucide-react';
 
 /**
- * Account Settings page for customers to update their profile
+ * Account Settings page for all user roles to update their profile
  */
 const AccountSettings = () => {
   const { user, updateUser } = useAuth();
@@ -39,6 +39,15 @@ const AccountSettings = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getRoleDisplayName = (role) => {
+    const roleNames = {
+      admin: 'Administrator',
+      mechanic: 'Mechanic',
+      customer: 'Customer'
+    };
+    return roleNames[role] || role;
   };
 
   return (
@@ -100,8 +109,8 @@ const AccountSettings = () => {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Role
             </label>
-            <p className="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-md capitalize">
-              {user?.role}
+            <p className="text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-md">
+              {getRoleDisplayName(user?.role)}
             </p>
           </div>
           

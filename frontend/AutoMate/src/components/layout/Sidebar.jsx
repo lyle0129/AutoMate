@@ -66,6 +66,12 @@ const getMenuItems = (userRole) => {
         href: '/admin/reports',
         icon: BarChart3,
         description: 'System reports and analytics'
+      },
+      {
+        name: 'Account Settings',
+        href: '/admin/settings',
+        icon: Settings,
+        description: 'Update your username and password'
       }
     ],
     mechanic: [
@@ -92,6 +98,12 @@ const getMenuItems = (userRole) => {
         href: '/mechanic/invoices',
         icon: Receipt,
         description: 'Generate and manage invoices'
+      },
+      {
+        name: 'Account Settings',
+        href: '/mechanic/settings',
+        icon: Settings,
+        description: 'Update your username and password'
       }
     ],
     customer: [

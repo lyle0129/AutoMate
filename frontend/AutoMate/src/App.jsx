@@ -18,7 +18,7 @@ import {
   OwnerList,
   AdminInvoiceGeneration
 } from './pages';
-import AccountSettings from './pages/customer/AccountSettings';
+import AccountSettings from './pages/shared/AccountSettings';
 import UserManagement from './pages/admin/UserManagement';
 import ServiceManagement from './pages/admin/ServiceManagement';
 import MaintenanceManagement from './pages/admin/MaintenanceManagement';
@@ -110,6 +110,11 @@ function App() {
                     <MaintenanceManagement />
                   </AdminRoute>
                 } />
+                <Route path="admin/settings" element={
+                  <AdminRoute>
+                    <AccountSettings />
+                  </AdminRoute>
+                } />
 
                 {/* Mechanic routes */}
                 <Route path="mechanic/dashboard" element={
@@ -140,6 +145,11 @@ function App() {
                 <Route path="mechanic/invoices" element={
                   <MechanicRoute>
                     <InvoiceList />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/settings" element={
+                  <MechanicRoute>
+                    <AccountSettings />
                   </MechanicRoute>
                 } />
 

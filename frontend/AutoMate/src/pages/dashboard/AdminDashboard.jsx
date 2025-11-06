@@ -154,10 +154,10 @@ const AdminDashboard = () => {
       color: 'yellow'
     },
     {
-      title: 'Add Vehicle',
-      description: 'Register a new vehicle',
-      icon: Plus,
-      action: () => navigate('/admin/vehicles/new'),
+      title: 'Account Settings',
+      description: 'Update your username and password',
+      icon: Users,
+      action: () => navigate('/admin/settings'),
       color: 'purple'
     }
   ];

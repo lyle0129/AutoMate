@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { useVehicles } from '../../hooks/useVehicles';
-import { Car, Wrench, Clock, CheckCircle, Search, Plus, FileText, Calendar } from 'lucide-react';
+import { Car, Wrench, Clock, CheckCircle, Search, Plus, FileText, Calendar, User } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
@@ -330,7 +330,7 @@ const MechanicDashboard = () => {
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Button
             variant="outline"
             className="p-4 h-auto text-left justify-start"
@@ -374,6 +374,22 @@ const MechanicDashboard = () => {
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Create invoice for completed work
+              </p>
+            </div>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="p-4 h-auto text-left justify-start"
+            onClick={() => navigate('/mechanic/settings')}
+          >
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <User className="h-4 w-4" />
+                <h3 className="font-medium">Account Settings</h3>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Update username and password
               </p>
             </div>
           </Button>
