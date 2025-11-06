@@ -17,6 +17,7 @@ import {
   AdminVehicleList,
   OwnerList,
   OwnerDetail,
+  Reports,
   AdminInvoiceGeneration,
   AccountSettings
 } from './pages';
@@ -99,6 +100,11 @@ function App() {
                 <Route path="admin/owners/:ownerId" element={
                   <AdminRoute>
                     <OwnerDetail />
+                  </AdminRoute>
+                } />
+                <Route path="admin/reports" element={
+                  <AdminRoute>
+                    <Reports />
                   </AdminRoute>
                 } />
                 <Route path="admin/invoices/new" element={
