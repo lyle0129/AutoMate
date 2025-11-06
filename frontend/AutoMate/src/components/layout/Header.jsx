@@ -41,14 +41,16 @@ const Header = ({ isMobileMenuOpen, onMobileMenuToggle }) => {
           </button>
           
           <div className="ml-4 lg:ml-0">
-            <div className="fixed top-4 left-4 z-50 flex items-center space-x-2">
-              <img
-                src={logo}
-                alt="V-Garage Logo"
-                className="h-10 w-auto"
-              />
-              <span className="text-lg font-bold text-gray-900 dark:text-gray-100">V-GARAGE</span>
-            </div>
+          <div className="flex items-center space-x-2 ml-4 lg:ml-0">
+            <img
+              src={logo}
+              alt="V-Garage Logo"
+              className="h-10 w-auto"
+            />
+            <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+              V-GARAGE
+            </span>
+          </div>
           </div>
         </div>
 
