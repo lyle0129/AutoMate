@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { createUser, findUserByUsername, getAllUsers, findUserById, updateUser, deleteUser } from "../models/userModel.js";
+import { createUser, findUserByUsername, getAllUsers, findUserById, updateUser, updateUserProfile, deleteUser } from "../models/userModel.js";
 import { generateToken } from "../utils/jwt.js"; // assuming jwt.js is inside /utils
 
 // REGISTER new user (Admin only)
@@ -202,6 +202,78 @@ export const updateUserById = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// UPDATE own profile (authenticated users)
+export const updateProfile = async (req, res) => {
+  try {
+    const { user_name, current_password, new_password } = req.body;
+    const userId = req.user.id;
+
+    // Validate input
+    if (!user_name && !new_password) {
+      return res.status(400).json({ message: "At least username or new password is required" });
+    }
+
+    // If changing password, verify current password
+    if (new_password) {
+      if (!current_password) {
+        return res.status(400).json({ message: "Current password is required to change password" });
+      }
+
+      // Get current user data to verify password
+      const currentUser = await findUserById(userId);
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Get full user data including password hash
+      const userWithPassword = await findUserByUsername(currentUser.user_name);
+      const isCurrentPasswordValid = await bcrypt.compare(current_password, userWithPassword.password_hash);
+      
+      if (!isCurrentPasswordValid) {
+        return res.status(401).json({ message: "Current password is incorrect" });
+      }
+    }
+
+    // Check if new username already exists (if username is being changed)
+    if (user_name) {
+      const existingUser = await findUserByUsername(user_name);
+      if (existingUser && existingUser.id !== userId) {
+        return res.status(409).json({ message: "Username already exists" });
+      }
+    }
+
+    // Prepare updates object
+    const updates = {};
+    if (user_name) {
+      updates.user_name = user_name;
+    }
+    if (new_password) {
+      const saltRounds = 10;
+      updates.password_hash = await bcrypt.hash(new_password, saltRounds);
+    }
+
+    // Update user profile
+    const updatedUser = await updateUserProfile(userId, updates);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        id: updatedUser.id,
+        user_name: updatedUser.user_name,
+        role: updatedUser.role,
+        owner_id: updatedUser.owner_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating profile:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -68,6 +68,47 @@ export const updateUser = async (id, updates) => {
   }
 };
 
+export const updateUserProfile = async (id, updates) => {
+  try {
+    const { user_name, password_hash } = updates;
+    
+    // Build dynamic query based on what fields are being updated
+    if (user_name !== undefined && password_hash !== undefined) {
+      // Update both username and password
+      const result = await sql`
+        UPDATE users 
+        SET user_name = ${user_name}, password_hash = ${password_hash}
+        WHERE id = ${id}
+        RETURNING id, user_name, role, owner_id, created_at
+      `;
+      return result[0];
+    } else if (user_name !== undefined) {
+      // Update only username
+      const result = await sql`
+        UPDATE users 
+        SET user_name = ${user_name}
+        WHERE id = ${id}
+        RETURNING id, user_name, role, owner_id, created_at
+      `;
+      return result[0];
+    } else if (password_hash !== undefined) {
+      // Update only password
+      const result = await sql`
+        UPDATE users 
+        SET password_hash = ${password_hash}
+        WHERE id = ${id}
+        RETURNING id, user_name, role, owner_id, created_at
+      `;
+      return result[0];
+    } else {
+      throw new Error('No fields to update');
+    }
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+};
+
 export const deleteUser = async (id) => {
   try {
     const result = await sql`

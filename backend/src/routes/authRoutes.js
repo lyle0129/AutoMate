@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, logout, me, getUsers, getUserById, updateUserById, deleteUserById } from '../controllers/authController.js';
+import { register, login, logout, me, updateProfile, getUsers, getUserById, updateUserById, deleteUserById } from '../controllers/authController.js';
 import { verifyToken, requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -9,6 +9,7 @@ router.post('/register', verifyToken, requireAdmin, register); // Now requires a
 router.post('/login', login);
 router.post('/logout', logout);
 router.get('/me', verifyToken, me); // New endpoint to check current user
+router.put('/profile', verifyToken, updateProfile); // Update own profile
 
 // User management routes (Admin only)
 router.get('/users', verifyToken, requireAdmin, getUsers);
