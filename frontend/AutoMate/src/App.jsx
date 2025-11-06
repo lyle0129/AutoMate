@@ -16,6 +16,7 @@ import {
   Unauthorized,
   AdminVehicleList,
   OwnerList,
+  OwnerDetail,
   AdminInvoiceGeneration,
   AccountSettings
 } from './pages';
@@ -93,6 +94,11 @@ function App() {
                 <Route path="admin/owners" element={
                   <AdminRoute>
                     <OwnerList />
+                  </AdminRoute>
+                } />
+                <Route path="admin/owners/:ownerId" element={
+                  <AdminRoute>
+                    <OwnerDetail />
                   </AdminRoute>
                 } />
                 <Route path="admin/invoices/new" element={

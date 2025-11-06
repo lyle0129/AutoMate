@@ -7,7 +7,7 @@ export { default as Register } from './auth/Register';
 export { AdminDashboard, MechanicDashboard, CustomerDashboard } from './dashboard';
 
 // Admin Pages
-export { UserManagement, ServiceManagement, OwnerList, InvoiceGeneration as AdminInvoiceGeneration } from './admin';
+export { UserManagement, ServiceManagement, OwnerList, OwnerDetail, InvoiceGeneration as AdminInvoiceGeneration } from './admin';
 
 // Mechanic Pages
 export { MaintenanceLogging, InvoiceGeneration as MechanicInvoiceGeneration } from './mechanic';
