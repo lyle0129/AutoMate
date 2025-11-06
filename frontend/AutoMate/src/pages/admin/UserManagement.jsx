@@ -155,6 +155,7 @@ const UserManagement = () => {
         </Button>
       </div>
 
+      {/* Error Alert */}
       {error && (
         <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
           <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
@@ -171,7 +172,7 @@ const UserManagement = () => {
                 placeholder="Search by username or role..."
                 value={searchTerm}
                 onChange={(name, value) => setSearchTerm(value)}
-                className="pl-10 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
+                className="pl-10 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 w-full"
               />
             </div>
           </div>
@@ -184,31 +185,22 @@ const UserManagement = () => {
                 onClick={() => setSearchTerm('')}
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
               >
-                Clear search
+                Clear
               </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* Users table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                System Users
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {filteredUsers.length} {filteredUsers.length === 1 ? 'user' : 'users'} found
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Total: {users.length}
-              </span>
-            </div>
-          </div>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            System Users
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {filteredUsers.length} {filteredUsers.length === 1 ? 'user' : 'users'} found
+          </p>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -232,121 +224,138 @@ const UserManagement = () => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {filteredUsers.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="px-6 py-16 text-center">
-                    <div className="flex flex-col items-center space-y-4">
-                      <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                        <Users className="h-8 w-8 text-gray-400" />
+              {filteredUsers.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                          {user.user_name.charAt(0).toUpperCase()}
+                        </span>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                          {searchTerm ? 'No matching users' : 'No users found'}
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-sm">
-                          {searchTerm
-                            ? 'Try adjusting your search criteria or clear the search to see all users.'
-                            : 'Get started by creating your first user account.'
-                          }
-                        </p>
+                      <div className="ml-4">
+                        <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                          {user.user_name}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          ID: #{user.id}
+                        </div>
                       </div>
-                      {!searchTerm && (
-                        <Button
-                          onClick={() => setShowCreateModal(true)}
-                          className="mt-4"
-                        >
-                          <UserPlus className="h-4 w-4 mr-2" />
-                          Create First User
-                        </Button>
-                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}>
+                      {user.role}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                    {user.owner_id ? `#${user.owner_id}` : <span className="text-gray-400 dark:text-gray-500">Not assigned</span>}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-gray-400">
+                    {new Date(user.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setShowEditModal(true);
+                        }}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setShowDeleteModal(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </td>
                 </tr>
-              ) : (
-                filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/20 dark:to-blue-800/20 rounded-full flex items-center justify-center shadow-sm">
-                          <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                            {user.user_name.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                            {user.user_name}
-                          </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
-                            ID: #{user.id}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}>
-                        {user.role}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white">
-                        {user.owner_id ? (
-                          <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                            #{user.owner_id}
-                          </span>
-                        ) : (
-                          <span className="text-gray-400 dark:text-gray-500">Not assigned</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {user.created_at ? (
-                          <div>
-                            <div>{new Date(user.created_at).toLocaleDateString()}</div>
-                            <div className="text-xs text-gray-400 dark:text-gray-500">
-                              {new Date(user.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-gray-400 dark:text-gray-500">Unknown</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedUser(user);
-                            setShowEditModal(true);
-                          }}
-                          className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 dark:hover:bg-blue-900/20 dark:hover:border-blue-600 dark:hover:text-blue-400"
-                        >
-                          <Edit className="h-4 w-4" />
-                          <span className="sr-only">Edit user</span>
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedUser(user);
-                            setShowDeleteModal(true);
-                          }}
-                          className="hover:bg-red-50 hover:border-red-300 dark:hover:bg-red-900/20 dark:hover:border-red-600"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          <span className="sr-only">Delete user</span>
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Mobile Card View */}
+      <div className="grid gap-4 md:hidden">
+        {filteredUsers.length === 0 ? (
+          <div className="text-center py-8">
+            <Users className="mx-auto h-10 w-10 text-gray-400" />
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              {searchTerm ? 'No matching users found.' : 'No users yet. Add one to get started.'}
+            </p>
+          </div>
+        ) : (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm"
+            >
+              <div className="flex items-center mb-3">
+                <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                    {user.user_name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {user.user_name}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">ID: #{user.id}</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Role:</strong>{' '}
+                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}>
+                  {user.role}
+                </span>
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                <strong>Owner ID:</strong>{' '}
+                {user.owner_id ? `#${user.owner_id}` : 'Not assigned'}
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                <strong>Created:</strong>{' '}
+                {new Date(user.created_at).toLocaleDateString()}
+              </p>
+
+              <div className="flex justify-end space-x-2 mt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setShowEditModal(true);
+                  }}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setShowDeleteModal(true);
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+
 
       {/* Create User Modal */}
       <Modal

@@ -250,9 +250,9 @@ const AdminDashboard = () => {
       </div>
 
       {/* System Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"> */}
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        {/* <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Recent Activity
           </h2>
@@ -285,10 +285,10 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* System Health */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        {/* <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             System Health
           </h2>
@@ -312,8 +312,8 @@ const AdminDashboard = () => {
               <span className="text-sm text-gray-600 dark:text-gray-400">2 hours ago</span>
             </div>
           </div>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </div>
   );
 };
