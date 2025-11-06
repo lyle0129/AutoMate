@@ -214,13 +214,13 @@ const CustomerDashboard = () => {
               if (!lastServiceDate) {
                 status = 'No Service History';
                 statusColor = 'gray';
-              } else if (daysSinceService > 90) {
-                status = 'Service Due';
-                statusColor = 'yellow';
               } else if (daysSinceService > 180) {
                 status = 'Overdue';
                 statusColor = 'red';
-              }
+              } else if (daysSinceService > 90) {
+                status = 'Service Due';
+                statusColor = 'yellow';
+              } 
               
               return (
                 <div key={vehicle.vehicle_id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
