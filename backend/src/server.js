@@ -15,9 +15,15 @@ dotenv.config();
 const app = express();
 
 // CORS configuration for frontend communication with credentials
+// ✅ Updated CORS configuration
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'], // Frontend URLs
-    credentials: true, // Allow cookies to be sent
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:3000',
+        'https://v-garage.vercel.app' // your deployed frontend
+    ],
+    credentials: true, // allow cookies / auth headers
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
