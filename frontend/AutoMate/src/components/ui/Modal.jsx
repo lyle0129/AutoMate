@@ -50,7 +50,7 @@ const Modal = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-center justify-center px-2 sm:px-0"
       role="dialog"
       aria-modal="true"
       onClick={handleOverlayClick}
@@ -63,11 +63,15 @@ const Modal = ({
 
       {/* Modal Panel */}
       <div
-        className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transform transition-all animate-scaleIn w-full ${sizeClasses[size]} mx-4 sm:mx-0 ${className}`}
+        className={`
+          relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transform transition-all animate-scaleIn
+          w-full ${sizeClasses[size]} mx-4 sm:mx-0 ${className}
+          max-h-[90vh] flex flex-col
+        `}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
             {title && (
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100" id="modal-title">
                 {title}
@@ -86,14 +90,14 @@ const Modal = ({
           </div>
         )}
 
-        {/* Content */}
-        <div className="px-6 py-5 text-gray-700 dark:text-gray-300">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-6 py-5 text-gray-700 dark:text-gray-300">
           {children}
         </div>
 
         {/* Footer */}
         {footer && (
-          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
             {footer}
           </div>
         )}
