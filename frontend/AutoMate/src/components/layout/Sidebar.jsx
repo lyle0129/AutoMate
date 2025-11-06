@@ -62,6 +62,12 @@ const getMenuItems = (userRole) => {
         description: 'View all maintenance records'
       },
       {
+        name: 'Invoices',
+        href: '/admin/invoices',
+        icon: Receipt,
+        description: 'Generate and manage invoices'
+      },
+      {
         name: 'Reports',
         href: '/admin/reports',
         icon: BarChart3,

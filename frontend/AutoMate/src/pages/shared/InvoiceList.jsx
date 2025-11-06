@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useCurrentRole } from '../../hooks/useCurrentRole';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate, formatDateShort, daysBetween, daysAgo } from '../../utils/dateUtils';
 import { printInvoice, formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
+import { getInvoiceDetailPath } from '../../utils/routeUtils';
 import { 
   FileText, 
   Download, 
@@ -22,6 +24,7 @@ import {
  */
 const InvoiceList = () => {
   const [searchParams] = useSearchParams();
+  const currentRole = useCurrentRole();
   const { vehicles, loading: vehiclesLoading, fetchVehicles } = useVehicles();
   const { 
     getPaidMaintenanceLogs, 
@@ -425,7 +428,7 @@ const InvoiceList = () => {
                       
                       <div className="flex space-x-2">
                         <Link
-                          to={`/customer/invoices/${invoice.log_id}`}
+                          to={getInvoiceDetailPath(currentRole, invoice.log_id)}
                           className="flex items-center px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 border border-blue-300 dark:border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                         >
                           <Eye className="h-3 w-3 mr-1" />

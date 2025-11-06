@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useCurrentRole } from '../../hooks/useCurrentRole';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate, daysBetween, daysAgo } from '../../utils/dateUtils';
 import { formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
+import { getInvoicesListPath } from '../../utils/routeUtils';
 import { 
   ArrowLeft, 
   Calendar, 
@@ -20,6 +22,7 @@ import {
  */
 const MaintenanceHistory = () => {
   const { vehicleId } = useParams();
+  const currentRole = useCurrentRole();
   const { getVehicleById, loading: vehicleLoading, error: vehicleError } = useVehicles();
   const { 
     getMaintenanceLogsByVehicleId, 
@@ -368,7 +371,7 @@ const MaintenanceHistory = () => {
                       
                       {log.cost && !log.paid_at && (
                         <Link
-                          to={`/customer/invoices?log=${log.log_id}`}
+                          to={`${getInvoicesListPath(currentRole)}?log=${log.log_id}`}
                           className="flex items-center text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                         >
                           <Download className="h-3 w-3 mr-1" />

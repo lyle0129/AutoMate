@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { useCurrentRole } from '../../hooks/useCurrentRole';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate, daysBetween } from '../../utils/dateUtils';
 import { formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
-import { 
-  Car, 
-  Calendar, 
-  ArrowLeft, 
-  AlertTriangle, 
-  Wrench, 
+import { getVehiclesListPath, getInvoicesListPath } from '../../utils/routeUtils';
+import {
+  Car,
+  Calendar,
+  ArrowLeft,
+  AlertTriangle,
+  Wrench,
   DollarSign,
   Clock,
   FileText
@@ -20,14 +23,16 @@ import {
  */
 const VehicleDetail = () => {
   const { vehicleId } = useParams();
+  const { user } = useAuth();
+  const currentRole = useCurrentRole();
   const { getVehicleById, loading: vehicleLoading, error: vehicleError } = useVehicles();
-  const { 
-    getMaintenanceLogsByVehicleId, 
+  const {
+    getMaintenanceLogsByVehicleId,
     getMaintenanceHistorySummary,
-    loading: maintenanceLoading, 
-    error: maintenanceError 
+    loading: maintenanceLoading,
+    error: maintenanceError
   } = useMaintenance();
-  
+
   const [vehicle, setVehicle] = useState(null);
   const [maintenanceData, setMaintenanceData] = useState(null);
   const [maintenanceSummary, setMaintenanceSummary] = useState(null);
@@ -70,7 +75,7 @@ const VehicleDetail = () => {
         if (!dateA || !dateB) return 0;
         return dateB - dateA;
       })[0];
-    
+
     const daysSinceService = daysBetween(parseDate(lastService.created_at));
 
     if (daysSinceService === null) {
@@ -116,7 +121,7 @@ const VehicleDetail = () => {
             {vehicleError || maintenanceError}
           </p>
           <Link
-            to="/customer/vehicles"
+            to={getVehiclesListPath(currentRole)}
             className="mt-4 inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -134,7 +139,7 @@ const VehicleDetail = () => {
           <Car className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600 dark:text-gray-400 text-lg">Vehicle not found</p>
           <Link
-            to="/customer/vehicles"
+            to={getVehiclesListPath(currentRole)}
             className="mt-4 inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -153,7 +158,7 @@ const VehicleDetail = () => {
       <div className="flex items-center justify-between">
         <div>
           <Link
-            to="/customer/vehicles"
+            to={getVehiclesListPath(currentRole)}
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-2"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -213,8 +218,8 @@ const VehicleDetail = () => {
             <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
               <DollarSign className="h-8 w-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
               <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                ${maintenanceSummary.maintenance_summary?.total_cost ? 
-                  parseFloat(maintenanceSummary.maintenance_summary.total_cost).toFixed(2) : 
+                ${maintenanceSummary.maintenance_summary?.total_cost ?
+                  parseFloat(maintenanceSummary.maintenance_summary.total_cost).toFixed(2) :
                   '0.00'
                 }
               </p>
@@ -223,7 +228,7 @@ const VehicleDetail = () => {
             <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
               <Clock className="h-8 w-8 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {maintenanceData?.maintenance_logs?.length > 0 ? 
+                {maintenanceData?.maintenance_logs?.length > 0 ?
                   (() => {
                     const lastService = maintenanceData.maintenance_logs
                       .sort((a, b) => {
@@ -253,7 +258,7 @@ const VehicleDetail = () => {
             Recent Maintenance History
           </h2>
           <Link
-            to={`/customer/vehicles/${vehicleId}/maintenance`}
+            to={`/${currentRole}/vehicles/${vehicleId}/maintenance`}
             className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium"
           >
             View All History
@@ -283,32 +288,32 @@ const VehicleDetail = () => {
                     className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
                   >
                     <div className="flex-1">
-                     <div className="mb-2">
-                      <div className="flex items-center">
-                        <Wrench className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
-                        <p className="font-medium text-gray-900 dark:text-white">
-                          {formatInvoiceDescription(log.description)}
-                        </p>
-                      </div>
+                      <div className="mb-2">
+                        <div className="flex items-center">
+                          <Wrench className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
+                          <p className="font-medium text-gray-900 dark:text-white">
+                            {formatInvoiceDescription(log.description)}
+                          </p>
+                        </div>
 
-                      {(() => {
-                        const services = getServicesBreakdown(log.description);
-                        if (services.length > 0) {
-                          return (
-                            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                              <span className="text-gray-500 dark:text-gray-500 font-medium">Services:</span>{' '}
-                              {services
-                                .map(
-                                  (service) =>
-                                    `${service.service_name} — $${parseFloat(service.price || 0).toFixed(2)}`
-                                )
-                                .join(', ')}
-                            </p>
-                          );
-                        }
-                        return null;
-                      })()}
-                    </div>
+                        {(() => {
+                          const services = getServicesBreakdown(log.description);
+                          if (services.length > 0) {
+                            return (
+                              <p className="mt-1 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                <span className="text-gray-500 dark:text-gray-500 font-medium">Services:</span>{' '}
+                                {services
+                                  .map(
+                                    (service) =>
+                                      `${service.service_name} — $${parseFloat(service.price || 0).toFixed(2)}`
+                                  )
+                                  .join(', ')}
+                              </p>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </div>
 
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Performed by: {log.user_name}
@@ -323,11 +328,10 @@ const VehicleDetail = () => {
                           ${parseFloat(log.cost).toFixed(2)}
                         </p>
                       )}
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        log.paid_at ? 
-                          'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 
-                          'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
-                      }`}>
+                      <span className={`text-xs px-2 py-1 rounded-full ${log.paid_at ?
+                        'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                        'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                        }`}>
                         {log.paid_at ? 'Paid' : 'Pending'}
                       </span>
                     </div>
@@ -345,7 +349,7 @@ const VehicleDetail = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
-            to={`/customer/vehicles/${vehicleId}/maintenance`}
+            to={`/${currentRole}/vehicles/${vehicleId}/maintenance`}
             className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400 mr-3" />
@@ -357,7 +361,7 @@ const VehicleDetail = () => {
             </div>
           </Link>
           <Link
-            to="/customer/invoices"
+            to={getInvoicesListPath(currentRole)}
             className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             <FileText className="h-6 w-6 text-green-600 dark:text-green-400 mr-3" />

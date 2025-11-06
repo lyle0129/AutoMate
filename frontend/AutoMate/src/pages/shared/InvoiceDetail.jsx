@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useCurrentRole } from '../../hooks/useCurrentRole';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { parseDate, formatDate } from '../../utils/dateUtils';
 import { printInvoice, formatInvoiceDescription, getServicesBreakdown, formatServicesList } from '../../utils/invoiceUtils';
+import { getInvoicesListPath } from '../../utils/routeUtils';
 import {
   ArrowLeft,
   FileText,
@@ -22,6 +24,7 @@ import {
  */
 const InvoiceDetail = () => {
   const { invoiceId } = useParams();
+  const currentRole = useCurrentRole();
   const { vehicles, loading: vehiclesLoading, fetchVehicles } = useVehicles();
   const { getMaintenanceLogById, loading: maintenanceLoading, error: maintenanceError } = useMaintenance();
 
@@ -73,7 +76,7 @@ const InvoiceDetail = () => {
           <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <p className="text-red-600 dark:text-red-400 text-lg">{maintenanceError}</p>
           <Link
-            to="/customer/invoices"
+            to={getInvoicesListPath(currentRole)}
             className="mt-4 inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -92,7 +95,7 @@ const InvoiceDetail = () => {
           <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600 dark:text-gray-400 text-lg">Invoice not found</p>
           <Link
-            to="/customer/invoices"
+            to={getInvoicesListPath(currentRole)}
             className="mt-4 inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -111,7 +114,7 @@ const InvoiceDetail = () => {
       {/* Header - Hidden in print */}
       <div className="print:hidden">
         <Link
-          to="/customer/invoices"
+          to={getInvoicesListPath(currentRole)}
           className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />

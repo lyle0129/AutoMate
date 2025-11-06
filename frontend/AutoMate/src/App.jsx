@@ -16,9 +16,9 @@ import {
   Unauthorized,
   AdminVehicleList,
   OwnerList,
-  AdminInvoiceGeneration
+  AdminInvoiceGeneration,
+  AccountSettings
 } from './pages';
-import AccountSettings from './pages/shared/AccountSettings';
 import UserManagement from './pages/admin/UserManagement';
 import ServiceManagement from './pages/admin/ServiceManagement';
 import MaintenanceManagement from './pages/admin/MaintenanceManagement';
@@ -115,6 +115,26 @@ function App() {
                     <AccountSettings />
                   </AdminRoute>
                 } />
+                <Route path="admin/vehicles/:vehicleId" element={
+                  <AdminRoute>
+                    <VehicleDetail />
+                  </AdminRoute>
+                } />
+                <Route path="admin/vehicles/:vehicleId/maintenance" element={
+                  <AdminRoute>
+                    <MaintenanceHistory />
+                  </AdminRoute>
+                } />
+                <Route path="admin/invoices" element={
+                  <AdminRoute>
+                    <InvoiceList />
+                  </AdminRoute>
+                } />
+                <Route path="admin/invoices/:invoiceId" element={
+                  <AdminRoute>
+                    <InvoiceDetail />
+                  </AdminRoute>
+                } />
 
                 {/* Mechanic routes */}
                 <Route path="mechanic/dashboard" element={
@@ -150,6 +170,21 @@ function App() {
                 <Route path="mechanic/settings" element={
                   <MechanicRoute>
                     <AccountSettings />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/vehicles/:vehicleId" element={
+                  <MechanicRoute>
+                    <VehicleDetail />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/vehicles/:vehicleId/maintenance" element={
+                  <MechanicRoute>
+                    <MaintenanceHistory />
+                  </MechanicRoute>
+                } />
+                <Route path="mechanic/invoices/:invoiceId" element={
+                  <MechanicRoute>
+                    <InvoiceDetail />
                   </MechanicRoute>
                 } />
 
@@ -209,4 +244,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

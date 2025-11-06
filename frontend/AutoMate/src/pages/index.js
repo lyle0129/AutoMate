@@ -7,13 +7,16 @@ export { default as Register } from './auth/Register';
 export { AdminDashboard, MechanicDashboard, CustomerDashboard } from './dashboard';
 
 // Admin Pages
-export { UserManagement, ServiceManagement, VehicleList as AdminVehicleList, OwnerList, InvoiceGeneration as AdminInvoiceGeneration } from './admin';
+export { UserManagement, ServiceManagement, OwnerList, InvoiceGeneration as AdminInvoiceGeneration } from './admin';
 
 // Mechanic Pages
 export { MaintenanceLogging, InvoiceGeneration as MechanicInvoiceGeneration } from './mechanic';
 
 // Customer Pages
-export { VehicleList, VehicleDetail, MaintenanceHistory, InvoiceList, InvoiceDetail } from './customer';
+export { VehicleList } from './customer';
+
+// Shared Pages
+export { AccountSettings, VehicleDetail, MaintenanceHistory, InvoiceList, InvoiceDetail, AdminVehicleList } from './shared';
 
 // Error Pages
 export { NotFound, Unauthorized } from './error';

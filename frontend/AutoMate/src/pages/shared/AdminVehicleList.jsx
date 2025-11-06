@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useCurrentRole } from '../../hooks/useCurrentRole';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useOwners } from '../../hooks/useOwners';
 import { useSearch } from '../../hooks/useSearch';
+import { getVehicleDetailPath } from '../../utils/routeUtils';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
@@ -29,6 +31,7 @@ import {
  * Vehicle List page for admin and mechanic roles
  */
 const VehicleList = () => {
+  const currentRole = useCurrentRole();
   const { 
     vehicles, 
     loading, 
@@ -350,7 +353,7 @@ const VehicleList = () => {
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end space-x-2">
                           <Link
-                            to={`/admin/vehicles/${vehicle.vehicle_id}`}
+                            to={getVehicleDetailPath(currentRole, vehicle.vehicle_id)}
                             className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                           >
                             <Eye className="h-4 w-4" />
@@ -406,7 +409,7 @@ const VehicleList = () => {
                   </div>
                   <div className="flex justify-end space-x-3 mt-3">
                     <Link
-                      to={`/admin/vehicles/${vehicle.vehicle_id}`}
+                      to={getVehicleDetailPath(currentRole, vehicle.vehicle_id)}
                       className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                     >
                       <Eye className="h-4 w-4" />
