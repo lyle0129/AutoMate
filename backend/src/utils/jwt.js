@@ -8,7 +8,7 @@ export const generateToken = (payload, res) => {
   res.cookie("jwt", token, {
     maxAge: 8 * 60 * 60 * 1000, // 8 hours
     httpOnly: true,             // prevent XSS attacks
-    sameSite: "strict",         // prevent CSRF
+    sameSite: "none",         // prevent CSRF
     secure: process.env.NODE_ENV !== "development", // only send via HTTPS in production
   });
 
