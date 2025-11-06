@@ -151,17 +151,6 @@ const ProfileUpdateForm = ({ user, onSubmit, loading = false, error = null }) =>
               icon={Lock}
               placeholder="Enter your current password"
             />
-            <button
-              type="button"
-              onClick={() => togglePasswordVisibility('current')}
-              className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            >
-              {showPasswords.current ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
           </div>
         </div>
 
@@ -177,17 +166,6 @@ const ProfileUpdateForm = ({ user, onSubmit, loading = false, error = null }) =>
               icon={Lock}
               placeholder="Enter your new password"
             />
-            <button
-              type="button"
-              onClick={() => togglePasswordVisibility('new')}
-              className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            >
-              {showPasswords.new ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
           </div>
         </div>
 
@@ -203,17 +181,6 @@ const ProfileUpdateForm = ({ user, onSubmit, loading = false, error = null }) =>
               icon={Lock}
               placeholder="Confirm your new password"
             />
-            <button
-              type="button"
-              onClick={() => togglePasswordVisibility('confirm')}
-              className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            >
-              {showPasswords.confirm ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
           </div>
         </div>
       </div>
