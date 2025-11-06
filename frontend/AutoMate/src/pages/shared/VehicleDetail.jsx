@@ -13,7 +13,7 @@ import {
   ArrowLeft,
   AlertTriangle,
   Wrench,
-  DollarSign,
+  Banknote,
   Clock,
   FileText
 } from 'lucide-react';
@@ -216,9 +216,9 @@ const VehicleDetail = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Services</p>
             </div>
             <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <DollarSign className="h-8 w-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
+              <Banknote className="h-8 w-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
               <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                ${maintenanceSummary.maintenance_summary?.total_cost ?
+                ₱{maintenanceSummary.maintenance_summary?.total_cost ?
                   parseFloat(maintenanceSummary.maintenance_summary.total_cost).toFixed(2) :
                   '0.00'
                 }
@@ -305,7 +305,7 @@ const VehicleDetail = () => {
                                 {services
                                   .map(
                                     (service) =>
-                                      `${service.service_name} — $${parseFloat(service.price || 0).toFixed(2)}`
+                                      `${service.service_name} — ₱${parseFloat(service.price || 0).toFixed(2)}`
                                   )
                                   .join(', ')}
                               </p>
@@ -325,7 +325,7 @@ const VehicleDetail = () => {
                     <div className="text-right">
                       {log.cost && (
                         <p className="font-medium text-gray-900 dark:text-white mb-1">
-                          ${parseFloat(log.cost).toFixed(2)}
+                          ₱{parseFloat(log.cost).toFixed(2)}
                         </p>
                       )}
                       <span className={`text-xs px-2 py-1 rounded-full ${log.paid_at ?

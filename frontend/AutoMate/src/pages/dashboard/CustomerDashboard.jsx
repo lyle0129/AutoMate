@@ -103,13 +103,13 @@ const CustomerDashboard = () => {
       color: 'yellow',
       description: 'Awaiting payment'
     },
-    {
-      name: 'Service Alerts',
-      value: dashboardStats.serviceAlerts.toString(),
-      icon: AlertTriangle,
-      color: 'red',
-      description: 'Maintenance due'
-    }
+    // {
+    //   name: 'Service Alerts',
+    //   value: dashboardStats.serviceAlerts.toString(),
+    //   icon: AlertTriangle,
+    //   color: 'red',
+    //   description: 'Maintenance due'
+    // }
   ];
 
   const getStatCardClasses = (color) => {
@@ -135,7 +135,7 @@ const CustomerDashboard = () => {
       </div>
 
       {/* Vehicle statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {vehicleStats.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -322,7 +322,7 @@ const CustomerDashboard = () => {
                   <div className="text-right">
                     {log.cost && (
                       <p className="font-medium text-gray-900 dark:text-white">
-                        ${parseFloat(log.cost).toFixed(2)}
+                        ₱{parseFloat(log.cost).toFixed(2)}
                       </p>
                     )}
                     <span className={`text-xs ${

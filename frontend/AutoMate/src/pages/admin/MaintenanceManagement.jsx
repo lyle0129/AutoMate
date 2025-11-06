@@ -9,7 +9,7 @@ import {
     Calendar,
     Car,
     User,
-    DollarSign,
+    Banknote,
     CheckCircle,
     XCircle,
     AlertTriangle
@@ -280,9 +280,9 @@ const MaintenanceManagement = () => {
                         {/* Cost */}
                         <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
-                            <DollarSign className="w-4 h-4 text-gray-400 mr-1" />
+                            <Banknote className="w-4 h-4 text-gray-400 mr-1" />
                             <span className="text-sm text-gray-900 dark:text-white">
-                                ${parseFloat(log.cost || 0).toFixed(2)}
+                                ₱{parseFloat(log.cost || 0).toFixed(2)}
                             </span>
                             </div>
                         </td>
@@ -344,7 +344,7 @@ const MaintenanceManagement = () => {
                         <strong>Date:</strong> {formatDate(log.created_at)}
                     </p>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                        <strong>Cost:</strong> ${parseFloat(log.cost || 0).toFixed(2)}
+                        <strong>Cost:</strong> ₱{parseFloat(log.cost || 0).toFixed(2)}
                     </p>
                     <div className="flex justify-end space-x-3 pt-2 border-t border-gray-200 dark:border-gray-700">
                         <button onClick={() => handleView(log)} className="text-blue-600 dark:text-blue-400">
@@ -441,7 +441,7 @@ const MaintenanceManagement = () => {
                                             Cost
                                         </label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                                            ${selectedLog.cost}
+                                            ₱{selectedLog.cost}
                                         </p>
                                     </div>
                                     <div>

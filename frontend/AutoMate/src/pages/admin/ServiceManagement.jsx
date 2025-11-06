@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Wrench, Plus, Edit, Trash2, Search, DollarSign, Car } from 'lucide-react';
+import { Wrench, Plus, Edit, Trash2, Search, Banknote, Car } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Modal from '../../components/ui/Modal';
@@ -137,9 +137,9 @@ const ServiceManagement = () => {
 
   // Format price for display
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PH', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'PHP'
     }).format(price);
   };
 
@@ -231,7 +231,7 @@ const ServiceManagement = () => {
                   </div>
                   
                   <div className="flex items-center space-x-2 mb-3">
-                    <DollarSign className="h-4 w-4 text-green-500" />
+                    <Banknote className="h-4 w-4 text-green-500" />
                     <span className="text-xl font-bold text-green-600 dark:text-green-400">
                       {formatPrice(service.price)}
                     </span>

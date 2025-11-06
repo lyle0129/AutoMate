@@ -88,7 +88,7 @@ const InvoiceGeneration = () => {
               <div className="flex justify-between">
                 <span className="font-medium">Amount:</span>
                 <span className="font-bold text-green-600 dark:text-green-400">
-                  ${parseFloat(generatedInvoice.cost || 0).toFixed(2)}
+                  ₱{parseFloat(generatedInvoice.cost || 0).toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between">

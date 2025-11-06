@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, DollarSign, Printer, Eye } from 'lucide-react';
+import { FileText, Banknote, Printer, Eye } from 'lucide-react';
 import Button from '../ui/Button';
 import { useMaintenance } from '../../hooks/useMaintenance';
 import { useVehicles } from '../../hooks/useVehicles';
@@ -188,7 +188,7 @@ const InvoiceForm = ({ onSubmit, onCancel, loading = false, initialData = null }
               return (
                 <option key={log.log_id} value={log.log_id}>
                   #{log.log_id} - {vehicle ? `${vehicle.plate_no} (${vehicle.make} ${vehicle.model})` : 'Unknown Vehicle'} -
-                  ${parseFloat(log.cost || 0).toFixed(2)} - {formatDate(log.created_at)}
+                  ₱{parseFloat(log.cost || 0).toFixed(2)} - {formatDate(log.created_at)}
                 </option>
               );
             })}
@@ -228,7 +228,7 @@ const InvoiceForm = ({ onSubmit, onCancel, loading = false, initialData = null }
                 <span className="font-medium">Technician:</span> {selectedLog.user_name}
               </div>
               <div>
-                <span className="font-medium">Cost:</span> ${parseFloat(selectedLog.cost || 0).toFixed(2)}
+                <span className="font-medium">Cost:</span> ₱{parseFloat(selectedLog.cost || 0).toFixed(2)}
               </div>
             </div>
 
@@ -248,7 +248,7 @@ const InvoiceForm = ({ onSubmit, onCancel, loading = false, initialData = null }
                   {selectedServices.map((service, index) => (
                     <div key={index} className="flex justify-between text-sm">
                       <span>• {service.service_name}</span>
-                      <span>${parseFloat(service.price || 0).toFixed(2)}</span>
+                      <span>₱{parseFloat(service.price || 0).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -267,7 +267,7 @@ const InvoiceForm = ({ onSubmit, onCancel, loading = false, initialData = null }
         {/* Payment Method */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            <DollarSign className="inline h-4 w-4 mr-1" />
+            <Banknote className="inline h-4 w-4 mr-1" />
             Payment Method *
           </label>
           <select

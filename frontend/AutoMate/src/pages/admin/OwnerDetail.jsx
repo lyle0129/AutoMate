@@ -13,7 +13,7 @@ import {
     Car,
     Calendar,
     Wrench,
-    DollarSign,
+    Banknote,
     AlertTriangle,
     Eye,
     Edit,
@@ -277,11 +277,11 @@ const OwnerDetail = () => {
 
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                     <div className="flex items-center">
-                        <DollarSign className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                        <Banknote className="h-8 w-8 text-purple-600 dark:text-purple-400" />
                         <div className="ml-4">
                             <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Spent</p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                ${stats.totalSpent.toFixed(2)}
+                                ₱{stats.totalSpent.toFixed(2)}
                             </p>
                         </div>
                     </div>
@@ -367,7 +367,7 @@ const OwnerDetail = () => {
                                         <p>Plate: {vehicle.plate_no}</p>
                                         <p>Type: {vehicle.vehicle_type}</p>
                                         <p>Service Records: {vehicleLogs.length}</p>
-                                        <p>Total Spent: ${totalSpent.toFixed(2)}</p>
+                                        <p>Total Spent: ₱{totalSpent.toFixed(2)}</p>
                                     </div>
 
                                     <Link

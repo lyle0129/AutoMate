@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Car, Wrench, DollarSign, User, Calendar } from 'lucide-react';
+import { Car, Wrench, Banknote, User, Calendar } from 'lucide-react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Select from '../ui/Select';
@@ -317,7 +317,7 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
                     </div>
                   </div>
                   <span className="font-semibold text-green-600 dark:text-green-400">
-                    ${parseFloat(service.price || 0).toFixed(2)}
+                    ₱{parseFloat(service.price || 0).toFixed(2)}
                   </span>
                 </label>
               );
@@ -341,7 +341,7 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
       <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="font-medium text-gray-700 dark:text-gray-300">
-            <DollarSign className="inline h-4 w-4 mr-1" />
+            <Banknote className="inline h-4 w-4 mr-1" />
             Cost Summary
           </span>
         </div>
@@ -351,7 +351,7 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
             {selectedServices.map((service) => (
               <div key={service.service_id} className="flex justify-between text-sm">
                 <span className="text-gray-600 dark:text-gray-400">{service.service_name}</span>
-                <span className="text-gray-900 dark:text-white">${parseFloat(service.price || 0).toFixed(2)}</span>
+                <span className="text-gray-900 dark:text-white">₱{parseFloat(service.price || 0).toFixed(2)}</span>
               </div>
             ))}
           </div>
@@ -360,7 +360,7 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
         <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-600">
           <span className="font-semibold text-gray-900 dark:text-white">Total Cost:</span>
           <span className="text-xl font-bold text-green-600 dark:text-green-400">
-            ${totalCost.toFixed(2)}
+            ₱{totalCost.toFixed(2)}
           </span>
         </div>
 

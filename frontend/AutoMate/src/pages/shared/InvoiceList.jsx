@@ -12,7 +12,7 @@ import {
   Eye, 
   Search, 
   Filter,
-  DollarSign,
+  Banknote,
   Calendar,
   AlertTriangle,
   CheckCircle,
@@ -242,11 +242,11 @@ const InvoiceList = () => {
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <div className="flex items-center">
-            <DollarSign className="h-8 w-8 text-green-600 dark:text-green-400" />
+            <Banknote className="h-8 w-8 text-green-600 dark:text-green-400" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Amount</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                ${calculateTotalAmount().toFixed(2)}
+                ₱{calculateTotalAmount().toFixed(2)}
               </p>
             </div>
           </div>
@@ -258,7 +258,7 @@ const InvoiceList = () => {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Paid</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                ${calculatePaidAmount().toFixed(2)}
+                ₱{calculatePaidAmount().toFixed(2)}
               </p>
             </div>
           </div>
@@ -270,7 +270,7 @@ const InvoiceList = () => {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Unpaid</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                ${calculateUnpaidAmount().toFixed(2)}
+                ₱{calculateUnpaidAmount().toFixed(2)}
               </p>
             </div>
           </div>
@@ -423,7 +423,7 @@ const InvoiceList = () => {
                     {/* Amount and Actions */}
                     <div className="text-right">
                       <p className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                        ${parseFloat(invoice.cost).toFixed(2)}
+                        ₱{parseFloat(invoice.cost).toFixed(2)}
                       </p>
                       
                       <div className="flex space-x-2">

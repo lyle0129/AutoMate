@@ -11,7 +11,7 @@ import {
   Calendar, 
   Search, 
   Wrench, 
-  DollarSign,
+  Banknote,
   User,
   AlertTriangle,
   Download
@@ -263,7 +263,7 @@ const MaintenanceHistory = () => {
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-              ${calculateTotalCost().toFixed(2)}
+              ₱{calculateTotalCost().toFixed(2)}
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">Total Cost</p>
           </div>
@@ -318,7 +318,7 @@ const MaintenanceHistory = () => {
                                 <span className="text-gray-500 dark:text-gray-500 mr-1">Service Breakdown:</span>
                                 {services.map((service, index) => (
                                   <span key={index} className="mr-3">
-                                    {service.service_name} — ${parseFloat(service.price || 0).toFixed(2)}
+                                    {service.service_name} — ₱{parseFloat(service.price || 0).toFixed(2)}
                                     {index < services.length - 1 ? ',' : ''}
                                   </span>
                                 ))}
@@ -346,8 +346,8 @@ const MaintenanceHistory = () => {
 
                         {log.cost && (
                           <div className="flex items-center text-gray-600 dark:text-gray-400">
-                            <DollarSign className="h-4 w-4 mr-2" />
-                            <span>Cost: ${parseFloat(log.cost).toFixed(2)}</span>
+                            <Banknote className="h-4 w-4 mr-2" />
+                            <span>Cost: ₱{parseFloat(log.cost).toFixed(2)}</span>
                           </div>
                         )}
                       </div>

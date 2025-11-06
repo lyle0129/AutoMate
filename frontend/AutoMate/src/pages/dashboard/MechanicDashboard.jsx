@@ -196,36 +196,6 @@ const MechanicDashboard = () => {
         </p>
       </div>
 
-      {/* Work statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {workStats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={stat.name}
-              className={`border rounded-lg p-6 ${getStatCardClasses(stat.color)}`}
-            >
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Icon className="h-8 w-8" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium opacity-75">
-                    {stat.name}
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {stat.value}
-                  </p>
-                  <p className="text-xs opacity-60">
-                    {stat.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
       {/* Vehicle Search */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -271,55 +241,6 @@ const MechanicDashboard = () => {
                   No vehicles found matching your search.
                 </p>
               )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Work queue */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Recent Work History
-          </h2>
-          <Button size="sm" variant="outline">
-            <Calendar className="h-4 w-4 mr-2" />
-            View All
-          </Button>
-        </div>
-
-        <div className="space-y-3">
-          {workQueue.length > 0 ? (
-            workQueue.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className={`h-3 w-3 bg-${item.color}-500 rounded-full`}></div>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {item.title} - {item.vehicle}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Plate: {item.plate} | Owner: {item.owner}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-500">
-                      {formatDate(item.date)}
-                    </p>
-                  </div>
-                </div>
-                <span className={`text-sm text-${item.color}-600 dark:text-${item.color}-400 font-medium`}>
-                  {item.priority} Priority
-                </span>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-8">
-              <Wrench className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">
-                No recent maintenance logs found.
-              </p>
             </div>
           )}
         </div>

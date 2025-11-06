@@ -11,7 +11,7 @@ import {
     BarChart3,
     Calendar,
     User,
-    DollarSign,
+    Banknote,
     Wrench,
     FileText,
     Download,
@@ -286,7 +286,7 @@ const Reports = () => {
                 vehicle ? `${vehicle.year} ${vehicle.make} ${vehicle.model} (${vehicle.plate_no})` : 'Unknown Vehicle',
                 owner?.name || 'Unknown Owner',
                 formatInvoiceDescription(log.description),
-                `$${parseFloat(log.cost || 0).toFixed(2)}`,
+                `₱${parseFloat(log.cost || 0).toFixed(2)}`,
                 log.paid_at ? 'Paid' : 'Unpaid',
                 paidDate ? formatDate(paidDate) : ''
             ];
@@ -489,11 +489,11 @@ const Reports = () => {
 
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                     <div className="flex items-center">
-                        <DollarSign className="h-8 w-8 text-green-600 dark:text-green-400" />
+                        <Banknote className="h-8 w-8 text-green-600 dark:text-green-400" />
                         <div className="ml-4">
                             <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Revenue</p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                ${summary.totalRevenue.toFixed(2)}
+                                ₱{summary.totalRevenue.toFixed(2)}
                             </p>
                         </div>
                     </div>
@@ -534,20 +534,20 @@ const Reports = () => {
                         <div className="flex justify-between items-center">
                             <span className="text-gray-600 dark:text-gray-400">Paid Revenue</span>
                             <span className="font-semibold text-green-600 dark:text-green-400">
-                                ${summary.paidRevenue.toFixed(2)}
+                                ₱{summary.paidRevenue.toFixed(2)}
                             </span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-gray-600 dark:text-gray-400">Unpaid Revenue</span>
                             <span className="font-semibold text-yellow-600 dark:text-yellow-400">
-                                ${summary.unpaidRevenue.toFixed(2)}
+                                ₱{summary.unpaidRevenue.toFixed(2)}
                             </span>
                         </div>
                         <div className="border-t border-gray-200 dark:border-gray-700 pt-2">
                             <div className="flex justify-between items-center">
                                 <span className="font-semibold text-gray-900 dark:text-white">Total Revenue</span>
                                 <span className="font-bold text-gray-900 dark:text-white">
-                                    ${summary.totalRevenue.toFixed(2)}
+                                    ₱{summary.totalRevenue.toFixed(2)}
                                 </span>
                             </div>
                         </div>
@@ -623,7 +623,7 @@ const Reports = () => {
                                                 {stats.count}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                                                ${stats.revenue.toFixed(2)}
+                                                ₱{stats.revenue.toFixed(2)}
                                             </td>
                                             {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                 ${(stats.revenue / stats.count).toFixed(2)}
@@ -674,7 +674,7 @@ const Reports = () => {
                                                 {stats.count}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                                                ${stats.revenue.toFixed(2)}
+                                                ₱{stats.revenue.toFixed(2)}
                                             </td>
                                             {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                 ${(stats.revenue / stats.count).toFixed(2)}

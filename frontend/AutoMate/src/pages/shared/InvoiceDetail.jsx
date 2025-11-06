@@ -270,7 +270,7 @@ const InvoiceDetail = () => {
                                 {services.map((service, index) => (
                                   <div key={index} className="flex justify-between pl-2">
                                     <span>• {service.service_name}</span>
-                                    <span>${parseFloat(service.price || 0).toFixed(2)}</span>
+                                    <span>₱{parseFloat(service.price || 0).toFixed(2)}</span>
                                   </div>
                                 ))}
                               </div>
@@ -284,7 +284,7 @@ const InvoiceDetail = () => {
                       {invoiceDate ? formatDate(invoiceDate) : 'Invalid Date'}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900 dark:text-white print:text-gray-900 text-right border-b border-gray-200 dark:border-gray-700 print:border-gray-300">
-                      ${parseFloat(invoice.cost).toFixed(2)}
+                      ₱{parseFloat(invoice.cost).toFixed(2)}
                     </td>
                   </tr>
                 </tbody>
@@ -299,7 +299,7 @@ const InvoiceDetail = () => {
                 <div className="flex justify-between mb-2">
                   <span className="text-gray-600 dark:text-gray-400 print:text-gray-600">Subtotal:</span>
                   <span className="font-medium text-gray-900 dark:text-white print:text-gray-900">
-                    ${parseFloat(invoice.cost).toFixed(2)}
+                    ₱{parseFloat(invoice.cost).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between mb-2">
@@ -309,7 +309,7 @@ const InvoiceDetail = () => {
                 <div className="flex justify-between text-xl font-bold border-t border-gray-200 dark:border-gray-700 print:border-gray-300 pt-2">
                   <span className="text-blue-600 dark:text-blue-400 print:text-blue-600">Total:</span>
                   <span className="text-blue-600 dark:text-blue-400 print:text-blue-600">
-                    ${parseFloat(invoice.cost).toFixed(2)}
+                    ₱{parseFloat(invoice.cost).toFixed(2)}
                   </span>
                 </div>
               </div>
