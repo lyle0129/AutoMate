@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import LoginForm from '../../components/forms/LoginForm';
 import { ThemeToggle } from '../../components/layout';
 import car from "../../assets/car.jpg" ;
+import logo from "../../assets/logo.jpg" ;
 
 const Login = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -42,6 +43,14 @@ const Login = () => {
       {/* Theme toggle (fixed and visible on all devices) */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle size="md" />
+        <div className="fixed top-4 left-4 z-50 flex items-center space-x-2">
+          <img
+            src={logo}
+            alt="V-Garage Logo"
+            className="h-10 w-auto"
+          />
+          <span className="text-lg font-bold text-gray-900 dark:text-gray-100">V-GARAGE</span>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col lg:flex-row">
@@ -76,12 +85,12 @@ const Login = () => {
           <div className="block lg:hidden absolute inset-0 bg-gradient-to-br from-blue-600/70 to-indigo-700/70 dark:from-blue-800/70 dark:to-indigo-900/70"></div>
 
           {/* Text overlay */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10 transform -translate-y-40">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white drop-shadow-lg">
-              AutoMate Garage
+              V-Garage Auto Care
             </h1>
             <p className="text-base sm:text-lg text-white/90 mt-2 drop-shadow-md">
-              Your trusted car service partner
+            AUTOMOTIVE • PAINT • BODY WORKS
             </p>
           </div>
         </div>
@@ -89,6 +98,14 @@ const Login = () => {
         {/* Right side – Login form */}
         <div className="flex flex-col justify-center items-center w-full lg:w-1/2 p-8 sm:p-12">
           <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-200">
+            {/* Logo */}
+            <div className="flex justify-center mb-6">
+              <img
+                src={logo}
+                alt="V-Garage Logo"
+                className="h-20 w-auto"
+              />
+            </div>
             <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-gray-100 mb-6">
               Welcome Back
             </h2>

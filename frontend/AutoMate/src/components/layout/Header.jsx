@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import ThemeToggle from './ThemeToggle';
+import logo from "../../assets/logo.jpg" ;
 
 /**
  * Header component with user info, theme toggle, and mobile menu control
@@ -40,9 +41,14 @@ const Header = ({ isMobileMenuOpen, onMobileMenuToggle }) => {
           </button>
           
           <div className="ml-4 lg:ml-0">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-              AutoMate
-            </h1>
+            <div className="fixed top-4 left-4 z-50 flex items-center space-x-2">
+              <img
+                src={logo}
+                alt="V-Garage Logo"
+                className="h-10 w-auto"
+              />
+              <span className="text-lg font-bold text-gray-900 dark:text-gray-100">V-GARAGE</span>
+            </div>
           </div>
         </div>
 
