@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import LoginForm from '../../components/forms/LoginForm';
 import { ThemeToggle } from '../../components/layout';
+import car from "../../assets/car.jpg" ;
 
 const Login = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -46,11 +47,21 @@ const Login = () => {
       <div className="flex flex-1 flex-col lg:flex-row">
         {/* Left side – Slanted image (desktop) / Rectangular image (mobile) */}
         <div className="relative w-full lg:w-1/2 h-56 sm:h-72 lg:h-auto overflow-hidden">
-          {/* Background image */}
+          {/* Mobile: rectangular image */}
           <img
-            src="/placeholder-shop.jpg" // Replace with your image path
+            src={car}
             alt="Shop placeholder"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover block lg:hidden"
+          />
+
+          {/* Desktop: slanted image */}
+          <img
+            src={car}
+            alt="Shop placeholder"
+            className="hidden lg:block absolute inset-0 w-full h-full object-cover"
+            style={{
+              clipPath: 'polygon(0 0, 80% 0, 100% 100%, 0% 100%)',
+            }}
           />
 
           {/* Slanted overlay for desktop only */}
