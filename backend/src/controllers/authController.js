@@ -97,11 +97,21 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "none", // must match generateToken
     secure: process.env.NODE_ENV !== "development",
   });
+
+  // Optional: also force-expire the cookie, for stubborn browsers
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: process.env.NODE_ENV !== "development",
+    expires: new Date(0),
+  });
+
   res.status(200).json({ message: "Logged out successfully" });
 };
+
 
 // GET current user info (requires authentication)
 export const me = (req, res) => {
