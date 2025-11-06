@@ -163,191 +163,231 @@ const MaintenanceManagement = () => {
     }
 
     return (
-        <div className="space-y-6">
+            <div className="space-y-6">
             {/* Header */}
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        Maintenance Management
-                    </h1>
-                    <p className="text-gray-600 dark:text-gray-400">
-                        Manage and track all maintenance logs
-                    </p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    Maintenance Management
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                    Manage and track all maintenance logs
+                </p>
                 </div>
-                <Button onClick={handleCreate} className="flex items-center gap-2">
-                    <Plus className="w-4 h-4" />
-                    Add Maintenance Log
+                <Button onClick={handleCreate} className="flex items-center gap-2 self-start sm:self-auto">
+                <Plus className="w-4 h-4" />
+                Add Maintenance Log
                 </Button>
             </div>
 
             {/* Filters and Search */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1">
-                        <Input
-                            type="text"
-                            placeholder="Search by vehicle, service, or mechanic..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            icon={Search}
-                        />
-                    </div>
-                    <div className="sm:w-48">
-                        <Select
-                            value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value)}
-                            options={[
-                                { value: 'all', label: 'All Status', key: 'status-all' },
-                                { value: 'paid', label: 'Paid', key: 'status-paid' },
-                                { value: 'unpaid', label: 'Unpaid', key: 'status-unpaid' }
-                            ]}
-                            icon={Filter}
-                        />
-                    </div>
+                <div className="flex-1">
+                    <Input
+                    type="text"
+                    placeholder="Search by vehicle, service, or mechanic..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    icon={Search}
+                    />
+                </div>
+                <div className="sm:w-48">
+                    <Select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    options={[
+                        { value: 'all', label: 'All Status', key: 'status-all' },
+                        { value: 'paid', label: 'Paid', key: 'status-paid' },
+                        { value: 'unpaid', label: 'Unpaid', key: 'status-unpaid' },
+                    ]}
+                    icon={Filter}
+                    />
+                </div>
                 </div>
             </div>
 
-            {/* Maintenance Logs Table */}
+            {/* Maintenance Logs */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead className="bg-gray-50 dark:bg-gray-700">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Vehicle
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Service
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Mechanic
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Date
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Cost
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Status
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {paginatedLogs().map((log, index) => (
-                                <tr key={log.log_id || log.id || `log-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <Car className="w-5 h-5 text-gray-400 mr-3" />
-                                            <div>
-                                                <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                                    {log.vehicle_make && log.vehicle_model ?
-                                                        `${log.vehicle_make} ${log.vehicle_model}` :
-                                                        `Vehicle ID: ${log.vehicle_id || 'N/A'}`
-                                                    }
-                                                </div>
-                                                <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                    {log.vehicle_license_plate || log.plate_no || 'License plate not available'}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900 dark:text-white">
-                                            {formatInvoiceDescription(log.description)}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <User className="w-4 h-4 text-gray-400 mr-2" />
-                                            <div className="text-sm text-gray-900 dark:text-white">
-                                                {log.user_name || 'Unknown mechanic'}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <Calendar className="w-4 h-4 text-gray-400 mr-2" />
-                                            <div className="text-sm text-gray-900 dark:text-white">
-                                                {formatDate(log.created_at)}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <DollarSign className="w-4 h-4 text-gray-400 mr-1" />
-                                            <div className="text-sm text-gray-900 dark:text-white">
-                                                ${parseFloat(log.cost || 0).toFixed(2)}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            {getStatusIcon(!!log.paid_at)}
-                                            <span className={`ml-2 text-sm ${log.paid_at ? 'text-green-600' : 'text-red-600'
-                                                }`}>
-                                                {getStatusText(!!log.paid_at)}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => handleView(log)}
-                                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleEdit(log)}
-                                                className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
-                                            >
-                                                <Edit className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(log)}
-                                                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead className="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        {[
+                        'Vehicle',
+                        'Service',
+                        'Mechanic',
+                        'Date',
+                        'Cost',
+                        'Status',
+                        'Actions',
+                        ].map((header) => (
+                        <th
+                            key={header}
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                        >
+                            {header}
+                        </th>
+                        ))}
+                    </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {paginatedLogs().map((log, index) => (
+                        <tr key={log.log_id || log.id || `log-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        {/* Vehicle */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                            <Car className="w-5 h-5 text-gray-400 mr-3" />
+                            <div>
+                                <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                {log.vehicle_make && log.vehicle_model
+                                    ? `${log.vehicle_make} ${log.vehicle_model}`
+                                    : `Vehicle ID: ${log.vehicle_id || 'N/A'}`}
+                                </div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {log.vehicle_license_plate || log.plate_no || 'No plate available'}
+                                </div>
+                            </div>
+                            </div>
+                        </td>
+
+                        {/* Service */}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                            {formatInvoiceDescription(log.description)}
+                        </td>
+
+                        {/* Mechanic */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                            <User className="w-4 h-4 text-gray-400 mr-2" />
+                            <span className="text-sm text-gray-900 dark:text-white">
+                                {log.user_name || 'Unknown mechanic'}
+                            </span>
+                            </div>
+                        </td>
+
+                        {/* Date */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                            <Calendar className="w-4 h-4 text-gray-400 mr-2" />
+                            <span className="text-sm text-gray-900 dark:text-white">
+                                {formatDate(log.created_at)}
+                            </span>
+                            </div>
+                        </td>
+
+                        {/* Cost */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                            <DollarSign className="w-4 h-4 text-gray-400 mr-1" />
+                            <span className="text-sm text-gray-900 dark:text-white">
+                                ${parseFloat(log.cost || 0).toFixed(2)}
+                            </span>
+                            </div>
+                        </td>
+
+                        {/* Status */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                            {getStatusIcon(!!log.paid_at)}
+                            <span className={`ml-2 text-sm ${log.paid_at ? 'text-green-600' : 'text-red-600'}`}>
+                                {getStatusText(!!log.paid_at)}
+                            </span>
+                            </div>
+                        </td>
+
+                        {/* Actions */}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                            <button onClick={() => handleView(log)} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                                <Eye className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleEdit(log)} className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300">
+                                <Edit className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleDelete(log)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                            </div>
+                        </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
                 </div>
 
-                {/* Empty State */}
+                {/* Mobile Cards */}
+                <div className="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
+                {paginatedLogs().map((log, index) => (
+                    <div key={log.log_id || log.id || `mobile-log-${index}`} className="p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                        <div className="font-semibold text-gray-900 dark:text-white">
+                        {log.vehicle_make && log.vehicle_model
+                            ? `${log.vehicle_make} ${log.vehicle_model}`
+                            : `Vehicle ID: ${log.vehicle_id || 'N/A'}`}
+                        </div>
+                        <span className={`text-xs px-2 py-1 rounded-full ${log.paid_at ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'}`}>
+                        {getStatusText(!!log.paid_at)}
+                        </span>
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {log.vehicle_license_plate || log.plate_no || 'No plate available'}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                        <strong>Service:</strong> {formatInvoiceDescription(log.description)}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                        <strong>Mechanic:</strong> {log.user_name || 'Unknown mechanic'}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                        <strong>Date:</strong> {formatDate(log.created_at)}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                        <strong>Cost:</strong> ${parseFloat(log.cost || 0).toFixed(2)}
+                    </p>
+                    <div className="flex justify-end space-x-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <button onClick={() => handleView(log)} className="text-blue-600 dark:text-blue-400">
+                        <Eye className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleEdit(log)} className="text-yellow-600 dark:text-yellow-400">
+                        <Edit className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(log)} className="text-red-600 dark:text-red-400">
+                        <Trash2 className="w-4 h-4" />
+                        </button>
+                    </div>
+                    </div>
+                ))}
+
                 {paginatedLogs().length === 0 && (
                     <div className="text-center py-12">
-                        <Car className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
-                            No maintenance logs found
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            {searchTerm || filterStatus !== 'all'
-                                ? 'Try adjusting your search or filters'
-                                : 'Get started by creating a new maintenance log'
-                            }
-                        </p>
+                    <Car className="mx-auto h-12 w-12 text-gray-400" />
+                    <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                        No maintenance logs found
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        {searchTerm || filterStatus !== 'all'
+                        ? 'Try adjusting your search or filters'
+                        : 'Get started by creating a new maintenance log'}
+                    </p>
                     </div>
                 )}
+                </div>
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={setCurrentPage}
-                        />
-                    </div>
+                <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                    <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    />
+                </div>
                 )}
             </div>
+
+
 
             {/* Modals */}
             {showModal && (
