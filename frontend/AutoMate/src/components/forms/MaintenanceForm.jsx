@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Car, Wrench, Banknote, User, Calendar } from 'lucide-react';
+import { Car, Wrench, Banknote, Calendar, Search } from 'lucide-react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
-import Select from '../ui/Select';
+import SearchableSelect from '../ui/SearchableSelect';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useVehicles } from '../../hooks/useVehicles';
 import serviceService from '../../services/serviceService';
-import { formatDate } from '../../utils/dateUtils';
 
 /**
  * MaintenanceForm component for creating new maintenance entries
@@ -28,6 +27,7 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
   const [selectedServices, setSelectedServices] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
   const [errors, setErrors] = useState({});
+  const [serviceSearchTerm, setServiceSearchTerm] = useState('');
 
   // Load initial data
   useEffect(() => {
@@ -161,16 +161,30 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
     onSubmit(submitData);
   };
 
-  // Filter services compatible with selected vehicle
+  // Filter services compatible with selected vehicle and search term
   const getCompatibleServices = () => {
-    if (!selectedVehicle) return services;
+    let filtered = services;
 
-    return services.filter(service => {
-      if (!service.vehicle_types || service.vehicle_types.length === 0) {
-        return true; // Service compatible with all vehicles
-      }
-      return service.vehicle_types.includes(selectedVehicle.vehicle_type);
-    });
+    // Filter by vehicle compatibility
+    if (selectedVehicle) {
+      filtered = filtered.filter(service => {
+        if (!service.vehicle_types || service.vehicle_types.length === 0) {
+          return true; // Service compatible with all vehicles
+        }
+        return service.vehicle_types.includes(selectedVehicle.vehicle_type);
+      });
+    }
+
+    // Filter by search term
+    if (serviceSearchTerm.trim()) {
+      const searchLower = serviceSearchTerm.toLowerCase();
+      filtered = filtered.filter(service =>
+        service.service_name.toLowerCase().includes(searchLower) ||
+        (service.vehicle_types && service.vehicle_types.some(type => type.toLowerCase().includes(searchLower)))
+      );
+    }
+
+    return filtered;
   };
 
   const compatibleServices = getCompatibleServices();
@@ -184,25 +198,36 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
           <Car className="inline h-4 w-4 mr-1" />
           Select Vehicle *
         </label>
-        <select
+        <SearchableSelect
+          options={vehicles.map(v => ({
+            value: v.vehicle_id,
+            label: `${v.plate_no} - ${v.make} ${v.model} (${v.year})${v.owner_name ? ` - ${v.owner_name}` : ''}`,
+            vehicle: v
+          }))}
           value={formData.vehicle_id}
-          onChange={(e) => handleVehicleChange(e.target.value)}
+          onChange={handleVehicleChange}
+          placeholder={vehiclesLoading ? 'Loading vehicles...' : vehicles.length === 0 ? 'No vehicles available' : 'Search and select a vehicle...'}
           disabled={vehiclesLoading}
-          className={`block w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 cursor-pointer ${errors.vehicle_id
-            ? 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500 bg-red-50 dark:bg-red-900/10 dark:border-red-600 dark:text-red-100'
-            : 'border-gray-300 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-800'
-            }`}
-        >
-          <option value="">
-            {vehiclesLoading ? 'Loading vehicles...' : vehicles.length === 0 ? 'No vehicles available' : 'Choose a vehicle'}
-          </option>
-          {vehicles.map((vehicle) => (
-            <option key={vehicle.vehicle_id} value={vehicle.vehicle_id}>
-              {vehicle.plate_no} - {vehicle.make} {vehicle.model} ({vehicle.year})
-              {vehicle.owner_name && ` - ${vehicle.owner_name}`}
-            </option>
-          ))}
-        </select>
+          error={!!errors.vehicle_id}
+          renderOption={(option) => (
+            <div>
+              <div className="font-medium">
+                {option.vehicle.plate_no} - {option.vehicle.make} {option.vehicle.model} ({option.vehicle.year})
+              </div>
+              {option.vehicle.owner_name && (
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  Owner: {option.vehicle.owner_name}
+                </div>
+              )}
+            </div>
+          )}
+          renderSelected={(option) => (
+            <span>
+              {option.vehicle.plate_no} - {option.vehicle.make} {option.vehicle.model}
+            </span>
+          )}
+          emptyMessage="No vehicles found"
+        />
         {errors.vehicle_id && (
           <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.vehicle_id}</p>
         )}
@@ -286,49 +311,77 @@ const MaintenanceForm = ({ onSubmit, onCancel, loading = false, initialData = nu
             <LoadingSpinner size="sm" />
             <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">Loading services...</span>
           </div>
-        ) : compatibleServices.length > 0 ? (
-          <div className="space-y-2 max-h-60 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-md p-3">
-            {compatibleServices.map((service) => {
-              const isSelected = selectedServices.some(s => s.service_id === service.service_id);
-              return (
-                <label
-                  key={service.service_id}
-                  className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${isSelected
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                    : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-                    }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => handleServiceToggle(service)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {service.service_name}
-                      </p>
-                      {service.vehicle_types && service.vehicle_types.length > 0 && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Compatible: {service.vehicle_types.join(', ')}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <span className="font-semibold text-green-600 dark:text-green-400">
-                    ₱{parseFloat(service.price || 0).toFixed(2)}
-                  </span>
-                </label>
-              );
-            })}
-          </div>
         ) : (
-          <div className="text-center py-8 border border-gray-300 dark:border-gray-600 rounded-md">
-            <Wrench className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedVehicle ? 'No services available for this vehicle type' : 'Select a vehicle to see available services'}
-            </p>
+          <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+            {/* Service Search */}
+            <div className="p-3 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-300 dark:border-gray-600">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={serviceSearchTerm}
+                  onChange={(e) => setServiceSearchTerm(e.target.value)}
+                  placeholder="Search services..."
+                  className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+              {selectedServices.length > 0 && (
+                <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+                  {selectedServices.length} service{selectedServices.length !== 1 ? 's' : ''} selected
+                </div>
+              )}
+            </div>
+
+            {/* Services List */}
+            {compatibleServices.length > 0 ? (
+              <div className="space-y-2 max-h-60 overflow-y-auto p-3">
+                {compatibleServices.map((service) => {
+                  const isSelected = selectedServices.some(s => s.service_id === service.service_id);
+                  return (
+                    <label
+                      key={service.service_id}
+                      className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${isSelected
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleServiceToggle(service)}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">
+                            {service.service_name}
+                          </p>
+                          {service.vehicle_types && service.vehicle_types.length > 0 && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              Compatible: {service.vehicle_types.join(', ')}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <span className="font-semibold text-green-600 dark:text-green-400">
+                        ₱{parseFloat(service.price || 0).toFixed(2)}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Wrench className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {serviceSearchTerm
+                    ? 'No services match your search'
+                    : selectedVehicle
+                      ? 'No services available for this vehicle type'
+                      : 'Select a vehicle to see available services'}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
